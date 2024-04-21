@@ -13,22 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->enum('role', ['trainer', 'member', 'admin']);
 
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
 
-            $table->boolean('is_basic_fit')->default(true);
-            $table->enum('role', ['trainer', 'member']);
-            $table->integer('home_club_address');
-
             $table->string('name');
             $table->string('surname');
-            $table->string('phone');
+            $table->string('phone')->unique();
 
             $table->text('bio')->nullable();
             $table->string('profile_image_url')->nullable();
-
 
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();

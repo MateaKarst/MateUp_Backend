@@ -49,9 +49,11 @@ DB_PASSWORD=your_database_password
 
 
 ### 7. Run Migrations
-Run database migrations to create necessary database tables:
+Run database migrations and seeds to create necessary database tables and its initial data:
 
 ```php artisan migrate```
+```php artisan db:seed```
+
 
 ### 7. Usage:
 After completing the installation steps, you can start using the Laravel application by running a local development server:

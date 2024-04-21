@@ -10,187 +10,254 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
-    // Register new user
+    // Create and Register new user
     public function register(Request $request)
     {
-        $request->validate([
-            'username' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
-            'is_basic_fit' => 'required',
-            'role' => 'required',
-            'home_club_address' => 'required',
-            'name' => 'required',
-            'surname' => 'required',
-            'phone' => 'required',
-        ]);
+        try {
+            $request->validate([
+                "role" => "required",
+                "email" => "required|email|unique:users",
+                "password" => "required|confirmed",
+                "name" => "required",
+                "surname" => "required",
+                "phone" => "required",
+            ]);
 
-        User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_basic_fit' => $request->is_basic_fit,
-            'role' => $request->role,
-            'home_club_address' => $request->home_club_address,
-            'name' => $request->name,
-            'surname' => $request->surname,
-            'phone' => $request->phone,
-            'bio' => $request->bio,
-            'profile_image_url' => $request->profile_image_url,
-            'facebook' => $request->facebook,
-            'instagram' => $request->instagram,
-            'twitter' => $request->twitter,
-        ]);
+            User::create([
+                "role" => $request->role,
+                "username" => $request->name . $request->surname,
+                "email" => $request->email,
+                "password" => Hash::make($request->password),
+                "name" => $request->name,
+                "surname" => $request->surname,
+                "phone" => $request->phone,
+            ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'User created successfully'
-        ]);
+            return response()->json([
+                "status" => true,
+                "message" => "User created successfully"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 
     // Login user
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        try {
+            $request->validate([
+                "email" => "required|email",
+                "password" => "required"
+            ]);
 
-        $token = JWTAuth::attempt([
-            'email' => $request->email,
-            'password' => $request->password
-        ]);
+            $token = JWTAuth::attempt([
+                "email" => $request->email,
+                "password" => $request->password
+            ]);
 
-        if (!empty($token)) {
+            if (!empty($token)) {
+                return response()->json([
+                    "status" => true,
+                    "message" => "User logged in successfully",
+                    "token" => $token
+                ]);
+            }
+
             return response()->json([
-                'status' => true,
-                'message' => 'User logged in successfully',
-                'token' => $token
+                "status" => false,
+                "message" => "Invalid credentials"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
             ]);
         }
-
-        return response()->json([
-            'status' => false,
-            'message' => 'Invalid credentials'
-        ]);
-    }
-
-    // User profile
-    public function profile()
-    {
-
-        $user = auth()->user();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'User profile',
-            'user' => $user
-        ]);
-    }
-
-    // Refresh token
-    public function refreshToken()
-    {
-
-        $newToken = JWTAuth::refresh(JWTAuth::getToken());
-
-        return response()->json([
-            'status' => true,
-            'message' => 'New token refreshed successfully',
-            'token' => $newToken
-        ]);
     }
 
     // Logout user
     public function logout()
     {
+        try {
+            auth()->logout();
 
-        auth()->logout();
+            return response()->json([
+                "status" => true,
+                "message" => "User logged out successfully"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
+    }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'User logged out successfully'
-        ]);
+    // Refresh token
+    public function refreshToken()
+    {
+        try {
+            $newToken = JWTAuth::refresh(JWTAuth::getToken());
+
+            return response()->json([
+                "status" => true,
+                "message" => "New token refreshed successfully",
+                "token" => $newToken
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
+    }
+
+    // Get user
+    public function getUser()
+    {
+        try {
+            $user = auth()->user();
+
+            if ($user) {
+                return response()->json([
+                    "status" => true,
+                    "user" => $user
+                ]);
+            }
+
+            return response()->json([
+                "status" => false,
+                "message" => "User not found"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 
     // Update user
     public function updateUser(Request $request)
     {
-        $user = auth()->user();
+        try {
+            $user = auth()->user();
 
-        if ($user instanceof \App\Models\User) {
-            $request->validate([
-                'username' => 'required',
-                'email' => 'required|email|unique:users,email,' . $user->id,
-                'password' => 'confirmed',
-                'is_basic_fit' => 'required',
-                'home_club_address' => 'required',
-                'name' => 'required',
-                'surname' => 'required',
-                'phone' => 'required',
-                'bio' => 'nullable',
-                'profile_image_url' => 'nullable',
-                'facebook' => 'nullable',
-                'instagram' => 'nullable',
-                'twitter' => 'nullable',
-            ]);
+            if ($user instanceof \App\Models\User) {
+                $request->validate([
+                    "username" => "required",
+                    "email" => "required|email|unique:users,email," . $user->id,
+                    "password" => "confirmed",
+                    "name" => "required",
+                    "surname" => "required",
+                    "phone" => "required",
+                    "bio" => "nullable",
+                    "profile_image_url" => "nullable",
+                    "facebook" => "nullable",
+                    "instagram" => "nullable",
+                    "twitter" => "nullable",
+                ]);
 
-            $user->update([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => isset($request->password) ? Hash::make($request->password) : $user->password,
-                'is_basic_fit' => $request->is_basic_fit,
-                'home_club_address' => $request->home_club_address,
-                'name' => $request->name,
-                'surname' => $request->surname,
-                'phone' => $request->phone,
-                'bio' => $request->bio,
-                'profile_image_url' => $request->profile_image_url,
-                'facebook' => $request->facebook,
-                'instagram' => $request->instagram,
-                'twitter' => $request->twitter,
-            ]);
+                $user->update([
+                    "username" => $request->username,
+                    "email" => $request->email,
+                    "password" => isset($request->password) ? Hash::make($request->password) : $user->password,
+                    "name" => $request->name,
+                    "surname" => $request->surname,
+                    "phone" => $request->phone,
+                    "bio" => $request->bio,
+                    "profile_image_url" => $request->profile_image_url,
+                    "facebook" => $request->facebook,
+                    "instagram" => $request->instagram,
+                    "twitter" => $request->twitter,
+                ]);
+
+                return response()->json([
+                    "status" => true,
+                    "message" => "User updated successfully",
+                    "user" => $user
+                ]);
+            }
 
             return response()->json([
-                'status' => true,
-                'message' => 'User updated successfully',
-                'user' => $user
+                "status" => false,
+                "message" => "User not found"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
             ]);
         }
-
-        return response()->json([
-            'status' => false,
-            'message' => 'User not found'
-        ]);
     }
 
     // Delete user
     public function deleteUser()
     {
-        $user = auth()->user();
+        try {
+            $user = auth()->user();
 
-        if ($user instanceof \App\Models\User) {
-            // Delete associated member or trainer record
-            if (!empty($user->member)) {
-                $user->member->delete();
+            if ($user instanceof \App\Models\User) {
+                // Delete associated member or trainer record
+                if (!empty($user->member)) {
+                    $user->member->delete();
+                }
+
+                if (!empty($user->trainer)) {
+                    $user->trainer->delete();
+                }
+
+                if (!empty($user->admin)) {
+                    $user->admin->delete();
+                }
+
+                // Now delete the user
+                $user->delete();
+
+                return response()->json([
+                    "status" => true,
+                    "message" => "User deleted successfully"
+                ]);
             }
-
-            if (!empty($user->trainer)) {
-                $user->trainer->delete();
-            }
-
-            // Now delete the user
-            $user->delete();
 
             return response()->json([
-                'status' => true,
-                'message' => 'User deleted successfully'
+                "status" => false,
+                "message" => "User not found"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
             ]);
         }
+    }
 
-        return response()->json([
-            'status' => false,
-            'message' => 'User not found'
-        ]);
+    // Get all users
+    public function getAllUsers()
+    {
+        try {
+            $users = User::all();
+
+            if ($users) {
+                return response()->json([
+                    "status" => true,
+                    "users" => $users
+                ]);
+            }
+
+            return response()->json([
+                "status" => false,
+                "message" => "Users not found"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
     }
 }

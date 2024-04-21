@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use App\Models\Member;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -11,7 +12,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable implements JWTSubject{
+class User extends Authenticatable implements JWTSubject
+{
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -70,7 +72,7 @@ class User extends Authenticatable implements JWTSubject{
     {
         return $this->hasOne(Trainer::class);
     }
-    
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -86,14 +88,23 @@ class User extends Authenticatable implements JWTSubject{
     protected static function boot()
     {
         parent::boot();
-        
+
         // Create member profile automatically when role member is created
         static::created(function ($user) {
+
             // Check if user has role member
             if ($user->role === 'member') {
                 Member::create([
                     'user_id' => $user->id,
+                    'home_club_address' => '1',
                     'fitness_level' => 'beginner'
+                ]);
+            }
+
+            // Check if user has role admin
+            if ($user->role === 'admin') {
+                Admin::create([
+                    'user_id' => $user->id
                 ]);
             }
         });
