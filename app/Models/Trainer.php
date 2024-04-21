@@ -9,6 +9,7 @@ class Trainer extends Model
 {
     use HasFactory;
 
+    // Attributes that are mass assignable.
     protected $fillable = [
         'user_id',
         'expertise',
@@ -23,8 +24,10 @@ class Trainer extends Model
         'updated_at',
     ];
 
+    // User relationship
     public function user()
     {
+        // The trainer belongs to a user
         return $this->belongsTo(User::class);
     }
 }

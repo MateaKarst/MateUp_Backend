@@ -19,10 +19,13 @@ class AdminMiddleware
     // AdminMiddleware.php
     public function handle(Request $request, Closure $next)
     {
+        // Check if user is authenticated and has admin role
         if (auth()->check() && auth()->user()->role === 'admin') {
+            // Proceed with request
             return $next($request);
         }
 
+        // Return forbidden response
         abort(403, 'Unauthorized.');
     }
 }

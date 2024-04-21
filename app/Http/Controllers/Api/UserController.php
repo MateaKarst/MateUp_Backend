@@ -14,6 +14,7 @@ class UserController extends Controller
     public function register(Request $request)
     {
         try {
+            // Validate request
             $request->validate([
                 "role" => "required",
                 "email" => "required|email|unique:users",
@@ -23,6 +24,7 @@ class UserController extends Controller
                 "phone" => "required",
             ]);
 
+            // Create user
             User::create([
                 "role" => $request->role,
                 "username" => $request->name . $request->surname,
@@ -33,11 +35,13 @@ class UserController extends Controller
                 "phone" => $request->phone,
             ]);
 
+            // Return success response
             return response()->json([
                 "status" => true,
                 "message" => "User created successfully"
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -49,17 +53,21 @@ class UserController extends Controller
     public function login(Request $request)
     {
         try {
+            // Validate request
             $request->validate([
                 "email" => "required|email",
                 "password" => "required"
             ]);
 
+            // Get token
             $token = JWTAuth::attempt([
                 "email" => $request->email,
                 "password" => $request->password
             ]);
 
+            // Check if token exists
             if (!empty($token)) {
+                // Return success response
                 return response()->json([
                     "status" => true,
                     "message" => "User logged in successfully",
@@ -67,11 +75,13 @@ class UserController extends Controller
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 "status" => false,
                 "message" => "Invalid credentials"
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -83,13 +93,16 @@ class UserController extends Controller
     public function logout()
     {
         try {
+            // Logout
             auth()->logout();
 
+            // Return success response
             return response()->json([
                 "status" => true,
                 "message" => "User logged out successfully"
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -101,14 +114,17 @@ class UserController extends Controller
     public function refreshToken()
     {
         try {
+            // Refresh token
             $newToken = JWTAuth::refresh(JWTAuth::getToken());
 
+            // Return success response
             return response()->json([
                 "status" => true,
                 "message" => "New token refreshed successfully",
                 "token" => $newToken
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -120,20 +136,25 @@ class UserController extends Controller
     public function getUser()
     {
         try {
+            // Get user
             $user = auth()->user();
 
+            // Check if user exists
             if ($user) {
+                // Return success response
                 return response()->json([
                     "status" => true,
                     "user" => $user
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 "status" => false,
                 "message" => "User not found"
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -145,9 +166,12 @@ class UserController extends Controller
     public function updateUser(Request $request)
     {
         try {
+            // Validate request
             $user = auth()->user();
 
+            // Check if user exists
             if ($user instanceof \App\Models\User) {
+                // Validate request
                 $request->validate([
                     "username" => "required",
                     "email" => "required|email|unique:users,email," . $user->id,
@@ -162,6 +186,7 @@ class UserController extends Controller
                     "twitter" => "nullable",
                 ]);
 
+                // Update user
                 $user->update([
                     "username" => $request->username,
                     "email" => $request->email,
@@ -176,6 +201,7 @@ class UserController extends Controller
                     "twitter" => $request->twitter,
                 ]);
 
+                // Return success response
                 return response()->json([
                     "status" => true,
                     "message" => "User updated successfully",
@@ -183,11 +209,13 @@ class UserController extends Controller
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 "status" => false,
                 "message" => "User not found"
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -199,18 +227,23 @@ class UserController extends Controller
     public function deleteUser()
     {
         try {
+            // Get user
             $user = auth()->user();
 
+            // Check if user exists
             if ($user instanceof \App\Models\User) {
-                // Delete associated member or trainer record
+
+                // Delete associated member
                 if (!empty($user->member)) {
                     $user->member->delete();
                 }
 
+                // Delete associated trainer record
                 if (!empty($user->trainer)) {
                     $user->trainer->delete();
                 }
 
+                // Delete associated admin record
                 if (!empty($user->admin)) {
                     $user->admin->delete();
                 }
@@ -218,17 +251,20 @@ class UserController extends Controller
                 // Now delete the user
                 $user->delete();
 
+                // Return success response
                 return response()->json([
                     "status" => true,
                     "message" => "User deleted successfully"
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 "status" => false,
                 "message" => "User not found"
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -240,21 +276,26 @@ class UserController extends Controller
     public function getAllUsers()
     {
         try {
+            // Get all users
             $users = User::all();
 
+            // Check if users exist
             if ($users) {
+                // Return success response
                 return response()->json([
                     "status" => true,
                     "users" => $users
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 "status" => false,
                 "message" => "Users not found"
             ]);
         } catch (\Exception $e) {
             return response()->json([
+                // Catch any exceptions and return error response
                 "status" => false,
                 "message" => $e->getMessage()
             ]);

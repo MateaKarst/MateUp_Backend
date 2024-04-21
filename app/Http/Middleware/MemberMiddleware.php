@@ -19,10 +19,13 @@ class MemberMiddleware
     // MemberMiddleware.php
     public function handle(Request $request, Closure $next)
     {
+        // Check if user is authenticated and has member role
         if (auth()->check() && auth()->user()->role === 'member') {
+            // Proceed with request
             return $next($request);
         }
 
+        // Return forbidden response
         abort(403, 'Unauthorized.');
     }
 }

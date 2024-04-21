@@ -9,6 +9,7 @@ class Member extends Model
 {
     use HasFactory;
 
+    // Attributes that are mass assignable.
     protected $fillable = [
         'user_id',
         'home_club_address',
@@ -18,9 +19,10 @@ class Member extends Model
         'updated_at',
     ];
 
-
+    // User relationship
     public function user()
     {
+        // The member belongs to a user
         return $this->belongsTo(User::class);
     }
 }

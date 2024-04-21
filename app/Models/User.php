@@ -16,11 +16,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // Attributes that are mass assignable.
     protected $fillable = [
         'username',
         'email',
@@ -40,21 +36,13 @@ class User extends Authenticatable implements JWTSubject
         'updated_at',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    // Attributes that should be hidden for serialization.
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    // Attributes that should be cast.
     protected function casts(): array
     {
         return [
@@ -63,37 +51,54 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    // User relationship member
     public function member()
     {
+        // The user has one member
         return $this->hasOne(Member::class);
     }
 
+    // User relationship trainer
     public function trainer()
     {
+        // The user has one trainer
         return $this->hasOne(Trainer::class);
     }
 
+    // User relationship admin
+    public function admin()
+    {
+        // The user has one trainer
+        return $this->hasOne(Admin::class);
+    }
+
+    // Get JWT identifier
     public function getJWTIdentifier()
     {
+        // Get JWT identifier
         return $this->getKey();
     }
 
+    // Get JWT custom claims
     public function getJWTCustomClaims()
     {
+        // Returns empty array
         return [];
     }
 
 
-    // Create member profile automatically
+    // Create user profiles automatically --> member and admin
     protected static function boot()
     {
+        // Boot user model
         parent::boot();
 
-        // Create member profile automatically when role member is created
+        // Create profile automatically when the role is created
         static::created(function ($user) {
 
             // Check if user has role member
             if ($user->role === 'member') {
+                // Create member
                 Member::create([
                     'user_id' => $user->id,
                     'home_club_address' => '1',
@@ -103,6 +108,7 @@ class User extends Authenticatable implements JWTSubject
 
             // Check if user has role admin
             if ($user->role === 'admin') {
+                // Create admin
                 Admin::create([
                     'user_id' => $user->id
                 ]);

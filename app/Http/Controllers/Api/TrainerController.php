@@ -13,6 +13,7 @@ class TrainerController extends Controller
     public function createTrainer(Request $request, $userId)
     {
         try {
+            // Validate request
             $request->validate([
                 'home_club_address' => 'required',
                 'expertise' => 'required',
@@ -23,6 +24,7 @@ class TrainerController extends Controller
                 'rate_amount' => 'required',
             ]);
 
+            // Create trainer
             Trainer::create([
                 'user_id' => $userId,
                 'home_club_address' => $request->home_club_address,
@@ -36,20 +38,25 @@ class TrainerController extends Controller
                 'stripe_url' => 'stripeTrainer@stripe.com',
             ]);
 
+            // Get trainer
             $trainer = Trainer::where('user_id', $userId)->first();
 
+            // Check if trainer exists
             if ($trainer) {
+                // Return success response
                 return response()->json([
                     'status' => true,
                     'message' => 'Trainer created successfully',
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 'status' => false,
                 'message' => 'Trainer not created',
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()
@@ -61,20 +68,25 @@ class TrainerController extends Controller
     public function getTrainer($userId)
     {
         try {
+            // Get trainer
             $trainer = Trainer::where('user_id', $userId)->first();
 
+            // Check if trainer exists
             if ($trainer) {
+                // Return success response
                 return response()->json([
                     'status' => true,
                     'trainer' => $trainer,
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 'status' => false,
                 'message' => 'Trainer not found',
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()
@@ -86,6 +98,7 @@ class TrainerController extends Controller
     public function updateTrainer(Request $request, $userId)
     {
         try {
+            // Validate request
             $request->validate([
                 'home_club_address' => 'required',
                 'expertise' => 'required',
@@ -96,9 +109,12 @@ class TrainerController extends Controller
                 'rate_amount' => 'required',
             ]);
 
+            // Get trainer
             $trainer = Trainer::where('user_id', $userId)->first();
 
+            // Check if trainer exists
             if ($trainer) {
+                // Update trainer
                 $trainer->update([
                     'home_club_address' => $request->home_club_address,
                     'expertise' => $request->expertise,
@@ -109,6 +125,7 @@ class TrainerController extends Controller
                     'content_about' => $request->content_about,
                 ]);
 
+                // Return success response
                 return response()->json([
                     'status' => true,
                     'message' => 'Trainer updated successfully',
@@ -116,11 +133,13 @@ class TrainerController extends Controller
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 'status' => false,
                 'message' => 'Trainer not found',
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()
@@ -132,20 +151,25 @@ class TrainerController extends Controller
     public function getAllTrainers()
     {
         try {
+            // Get trainers
             $trainers = Trainer::all();
 
+            // Check if trainers exist
             if ($trainers) {
+                // Return success response
                 return response()->json([
                     'status' => true,
                     'trainers' => $trainers,
                 ]);
             }
 
+            // Return error response
             return response()->json([
                 'status' => false,
                 'message' => 'No trainers found',
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()

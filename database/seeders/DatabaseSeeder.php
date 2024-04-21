@@ -11,11 +11,10 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
+    // Run the database seeds.
     public function run(): void
     {
+        // Create admin user
         User::create([
             'role' => 'admin',
             'username' => 'MainAdmin',
@@ -25,7 +24,9 @@ class DatabaseSeeder extends Seeder
             'surname' => 'Admin',
             'phone' => '000000001',
         ]);
+        // Admin user profile is automatically created
 
+        // Create member user
         User::create([
             'role' => 'member',
             'username' => 'MainMember',
@@ -35,7 +36,9 @@ class DatabaseSeeder extends Seeder
             'surname' => 'Member',
             'phone' => '000000002',
         ]);
+        // Member user profile is automatically created
 
+        // Create trainer user
         $trainer = User::create([
             'role' => 'trainer',
             'username' => 'MainTrainer',
@@ -46,6 +49,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '000000003',
         ]);
 
+        // Create trainer profile
         Trainer::create([
             'user_id' => $trainer->id,
             'home_club_address' => '1',
@@ -54,7 +58,7 @@ class DatabaseSeeder extends Seeder
             'languages' => 'English, Spanish',
             'content_about' => 'I am a trainer at basic fit',
             'stripe_id' => '000000',
-            'stripe_url'=> 'stripeTrainer@stripe.com',
+            'stripe_url' => 'stripeTrainer@stripe.com',
             'rate_currency' => 'EUR',
             'rate_amount' => '300',
         ]);
