@@ -12,6 +12,7 @@ class Trainer extends Model
     // Attributes that are mass assignable.
     protected $fillable = [
         'user_id',
+        'home_club_address',
         'expertise',
         'education',
         'languages',

@@ -44,11 +44,18 @@ class AdminController extends Controller
     }
 
     // Get admin
-    public function getAdmin($userId)
+    public function getAdmin($userId = null)
     {
         try {
             // Get admin
-            $admin = Admin::where('user_id', $userId)->first();
+            if ($userId) {
+                // Get admin by user ID
+                $admin = Admin::where('user_id', $userId)->first();
+            } else {
+                // Get admin from authenticated user
+                $userId = auth()->user()->id;
+                $admin = Admin::where('user_id', $userId)->first();
+            }
 
             // Check if admin exists
             if ($admin) {
@@ -74,11 +81,18 @@ class AdminController extends Controller
     }
 
     // Delete admin
-    public function deleteAdmin()
+    public function deleteAdmin($userId = null)
     {
         try {
             // Get admin
-            $admin = Admin::where('user_id', auth()->user()->id)->first();
+            if ($userId) {
+                // Get admin by user ID
+                $admin = Admin::where('user_id', $userId)->first();
+            } else {
+                // Get admin from authenticated user
+                $userId = auth()->user()->id;
+                $admin = Admin::where('user_id', $userId)->first();
+            }
 
             // Check if admin exists
             if ($admin) {

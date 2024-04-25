@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\TrainerController;
 use App\Http\Controllers\Api\AdminController;
-use GuzzleHttp\Middleware;
 
 // API Routes
 
@@ -15,6 +14,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// Authentication Routes
 Route::post('/login', [UserController::class, 'login'])->name('user.login'); // Login user
 
 // Protected Routes
@@ -22,70 +22,91 @@ Route::group([
     'middleware' => 'auth:api',
 ], function () {
 
-    // Common Auth Routes
+    // COMMON ROUTES
+    // Common Authentication Routes
     Route::post('/logout', [UserController::class, 'logout'])->name('user.logout'); // Logout user
     Route::post('/refresh-token', [UserController::class, 'refreshToken'])->name('token.refresh'); // Refresh token
 
     // Common User Routes
     Route::prefix('user')->group(function () {
-        Route::get('/{userId}', [UserController::class, 'getUser'])->name('user.get'); // Get user
-        Route::put('/{userId}', [UserController::class, 'updateUser'])->name('user.update'); // Update user
-        Route::delete('/{userId}', [UserController::class, 'deleteUser'])->name('user.delete'); // Delete user
+        Route::get('/', [UserController::class, 'getUser'])->name('user.get'); // Get user
+        Route::put('/', [UserController::class, 'updateUser'])->name('user.update'); // Update user
+        Route::delete('/', [UserController::class, 'deleteUser'])->name('user.delete'); // Delete user
     });
 
-    // Admin Routes (only for admins)
+    // ADMIN ROUTES (Access to all routes)
     Route::middleware(['admin'])->group(function () {
 
-        // Authentication Routes
+        // Authentication Routes (only for admins to use)
         Route::post('/register', [UserController::class, 'register'])->name('user.register'); // Register new user
 
         // Admin Routes
         Route::prefix('admin')->group(function () {
-            Route::get('/{userId}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get admin
+            Route::get('/', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get admin
             Route::get('/all', [AdminController::class, 'getAllAdmins'])->name('admin.get.all'); // Get all admins
 
-            // Automatic Routes
+            // Automatic Routes (not to be used - Backup routes)
             Route::post('/', [AdminController::class, 'createAdmin'])->name('admin.create'); // Create admin
-            Route::delete('/{userId}', [AdminController::class, 'deleteAdmin'])->name('admin.delete'); // Delete admin
+            Route::delete('/', [AdminController::class, 'deleteAdmin'])->name('admin.delete'); // Delete admin
         });
 
-        // Member and Trainer Routes (only for admins)
-        Route::prefix('member')->group(function () {
-            Route::get('/all', [AdminController::class, 'getAllMembers'])->name('admin.member.get.all'); // Get all members
+        // USER ROUTES
+        // User Routes (only for admins)
+        Route::prefix('user')->group(function () {
+            Route::get('/all', [AdminController::class, 'getAllUsers'])->name('admin.user.get.all'); // Get all users
 
-            // Automatic Routes
-            Route::post('/', [AdminController::class, 'createMember'])->name('admin.member.create'); // Create member
+            // To cRUD other users
+            Route::get('/{id}', [AdminController::class, 'getUser'])->name('admin.user.get'); // Get user
+            Route::put('/{id}', [AdminController::class, 'updateUser'])->name('admin.user.update'); // Update user
+            Route::delete('/{id}', [AdminController::class, 'deleteUser'])->name('admin.user.delete'); // Delete user
         });
 
-        Route::prefix('trainer')->group(function () {
-            Route::get('/all', [AdminController::class, 'getAllTrainers'])->name('admin.trainer.get.all'); // Get all trainers
-
-            // Automatic Routes
-            Route::post('/', [AdminController::class, 'createTrainer'])->name('admin.trainer.create'); // Create trainer
-        });
-
+        // MEMBER ROUTES
         // Member Routes (accessible to members and admins)
         Route::middleware(['member'])->group(function () {
             // Member Routes
             Route::prefix('member')->group(function () {
-                Route::get('/{userId}', [MemberController::class, 'getMember'])->name('member.get'); // Get member
-                Route::put('/{userId}', [MemberController::class, 'updateMember'])->name('member.update'); // Update member
-
-                // Automatic Routes
-                Route::delete('/{userId}', [MemberController::class, 'deleteMember'])->name('member.delete'); // Delete member
+                Route::get('/', [MemberController::class, 'getMember'])->name('member.get'); // Get member
+                Route::put('/', [MemberController::class, 'updateMember'])->name('member.update'); // Update member
             });
         });
 
+        // Member Routes (only for admins)
+        Route::prefix('member')->group(function () {
+            Route::get('/all', [AdminController::class, 'getAllMembers'])->name('admin.member.get.all'); // Get all members
+
+            // To cRUD other members
+            Route::get('/{id}', [AdminController::class, 'getMember'])->name('admin.member.get'); // Get member
+            Route::put('/{id}', [AdminController::class, 'updateMember'])->name('admin.member.update'); // Update member
+            Route::delete('/{id}', [AdminController::class, 'deleteMember'])->name('admin.member.delete'); // Delete member
+
+            // Automatic Routes (not to be used - Backup routes)
+            Route::post('/', [AdminController::class, 'createMember'])->name('admin.member.create'); // Create member
+            Route::delete('/', [MemberController::class, 'deleteMember'])->name('admin.member.delete'); // Delete member
+        });
+
+        // TRAINER ROUTES
         // Trainer Routes (accessible to trainers and admins)
         Route::middleware(['trainer'])->group(function () {
             // Trainer Routes
             Route::prefix('trainer')->group(function () {
-                Route::get('/{userId}', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get trainer
-                Route::put('/{userId}', [TrainerController::class, 'updateTrainer'])->name('trainer.update'); // Update trainer
-
-                // Automatic Routes
-                Route::delete('/{userId}', [TrainerController::class, 'deleteTrainer'])->name('trainer.delete'); // Delete trainer
+                Route::get('/', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get trainer
+                Route::put('/', [TrainerController::class, 'updateTrainer'])->name('trainer.update'); // Update trainer
             });
+        });
+
+        // Trainer Routes (only for admins)
+        Route::prefix('trainer')->group(function () {
+            Route::post('/', [AdminController::class, 'createTrainer'])->name('admin.trainer.create'); // Create trainer
+            Route::get('/all', [AdminController::class, 'getAllTrainers'])->name('admin.trainer.get.all'); // Get all trainers
+
+            // To cRUD other trainers
+            Route::get('/{id}', [AdminController::class, 'getTrainer'])->name('admin.trainer.get'); // Get trainer
+            Route::put('/{id}', [AdminController::class, 'updateTrainer'])->name('admin.trainer.update'); // Update trainer
+            Route::delete('/{id}', [AdminController::class, 'deleteTrainer'])->name('admin.trainer.delete'); // Delete trainer
+
+            // Automatic Routes (not to be used - Backup routes)
+            Route::delete('/', [TrainerController::class, 'deleteTrainer'])->name('admin.trainer.delete'); // Delete trainer
         });
     });
 });

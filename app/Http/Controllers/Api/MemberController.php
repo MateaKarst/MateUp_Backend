@@ -55,11 +55,18 @@ class MemberController extends Controller
     }
 
     // Get member
-    public function getMember($userId)
+    public function getMember($userId = null)
     {
         try {
             // Get member
-            $member = Member::where('user_id', $userId)->first();
+            if ($userId) {
+                // Get member by user ID
+                $member = Member::where('user_id', $userId)->first();
+            } else {
+                // Get member from authenticated user
+                $userId = auth()->user()->id;
+                $member = Member::where('user_id', $userId)->first();
+            }
 
             // Check if member exists
             if ($member) {
@@ -85,7 +92,7 @@ class MemberController extends Controller
     }
 
     // Update member
-    public function updateMember(Request $request, $userId)
+    public function updateMember(Request $request, $userId = null)
     {
         try {
             // Validate request
@@ -96,7 +103,14 @@ class MemberController extends Controller
             ]);
 
             // Get member
-            $member = Member::where('user_id', $userId)->first();
+            if ($userId) {
+                // Get member by user ID
+                $member = Member::where('user_id', $userId)->first();
+            } else {
+                // Get member from authenticated user
+                $userId = auth()->user()->id;
+                $member = Member::where('user_id', $userId)->first();
+            }
 
             // Check if member exists
             if ($member) {
@@ -134,7 +148,14 @@ class MemberController extends Controller
     {
         try {
             // Get member
-            $member = Member::where('user_id', $userId)->first();
+            if ($userId) {
+                // Get member by user ID
+                $member = Member::where('user_id', $userId)->first();
+            } else {
+                // Get member from authenticated user
+                $userId = auth()->user()->id;
+                $member = Member::where('user_id', $userId)->first();
+            }
 
             // Check if member exists
             if ($member) {

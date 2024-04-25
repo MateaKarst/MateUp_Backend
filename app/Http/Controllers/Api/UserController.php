@@ -133,11 +133,18 @@ class UserController extends Controller
     }
 
     // Get user
-    public function getUser()
+    public function getUser($userId = null)
     {
         try {
             // Get user
-            $user = auth()->user();
+            if ($userId) {
+                // Get user by ID
+                $user = User::find($userId);
+            } else {
+                // Get user from authenticated user
+                $userId = auth()->user()->id;
+                $user = User::find($userId);
+            }
 
             // Check if user exists
             if ($user) {
@@ -163,11 +170,18 @@ class UserController extends Controller
     }
 
     // Update user
-    public function updateUser(Request $request)
+    public function updateUser(Request $request, $userId = null)
     {
         try {
-            // Validate request
-            $user = auth()->user();
+            // Get user
+            if ($userId) {
+                // Get user by ID
+                $user = User::find($userId);
+            } else {
+                // Get user from authenticated user
+                $userId = auth()->user()->id;
+                $user = User::find($userId);
+            }
 
             // Check if user exists
             if ($user instanceof \App\Models\User) {
@@ -224,11 +238,18 @@ class UserController extends Controller
     }
 
     // Delete user
-    public function deleteUser()
+    public function deleteUser($userId = null)
     {
         try {
             // Get user
-            $user = auth()->user();
+            if ($userId) {
+                // Get user by ID
+                $user = User::find($userId);
+            } else {
+                // Get user from authenticated user
+                $userId = auth()->user()->id;
+                $user = User::find($userId);
+            }
 
             // Check if user exists
             if ($user instanceof \App\Models\User) {

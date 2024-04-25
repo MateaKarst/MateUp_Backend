@@ -69,7 +69,14 @@ class TrainerController extends Controller
     {
         try {
             // Get trainer
-            $trainer = Trainer::where('user_id', $userId)->first();
+            if ($userId) {
+                // Get trainer by user ID
+                $trainer = Trainer::where('user_id', $userId)->first();
+            } else {
+                // Get trainer from authenticated user
+                $userId = auth()->user()->id;
+                $trainer = Trainer::where('user_id', $userId)->first();
+            }
 
             // Check if trainer exists
             if ($trainer) {
@@ -110,7 +117,14 @@ class TrainerController extends Controller
             ]);
 
             // Get trainer
-            $trainer = Trainer::where('user_id', $userId)->first();
+            if ($userId) {
+                // Get trainer by user ID
+                $trainer = Trainer::where('user_id', $userId)->first();
+            } else {
+                // Get trainer from authenticated user
+                $userId = auth()->user()->id;
+                $trainer = Trainer::where('user_id', $userId)->first();
+            }
 
             // Check if trainer exists
             if ($trainer) {
@@ -137,6 +151,46 @@ class TrainerController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Trainer not found',
+            ]);
+        } catch (\Exception $e) {
+            // Catch any exceptions and return error response
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    // Delete trainer
+    public function deleteTrainer($userId)
+    {
+        try {
+            // Get trainer
+            if ($userId) {
+                // Get trainer by user ID
+                $trainer = Trainer::where('user_id', $userId)->first();
+            } else {
+                // Get trainer from authenticated user
+                $userId = auth()->user()->id;
+                $trainer = Trainer::where('user_id', $userId)->first();
+            }
+
+            // Check if trainer exists
+            if ($trainer) {
+                // Delete trainer
+                $trainer->delete();
+
+                // Return success response
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Trainer deleted successfully',
+                ]);
+            }
+
+            // Return error response
+            return response()->json([
+                'status' => false,
+                'message' => 'Trainer not deleted',
             ]);
         } catch (\Exception $e) {
             // Catch any exceptions and return error response
