@@ -52,6 +52,7 @@ DB_PASSWORD=your_database_password
 Run database migrations and seeds to create necessary database tables and its initial data:
 
 ```php artisan migrate```
+
 ```php artisan db:seed```
 
 
