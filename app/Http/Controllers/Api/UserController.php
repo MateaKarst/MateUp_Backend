@@ -33,6 +33,8 @@ class UserController extends Controller
                 "name" => $request->name,
                 "surname" => $request->surname,
                 "phone" => $request->phone,
+                "created_at" => now(),
+                "updated_at" => now(),
             ]);
 
             // Return success response
@@ -111,17 +113,35 @@ class UserController extends Controller
     }
 
     // Refresh token
-    public function refreshToken()
+    public function refreshToken($userId = null)
     {
         try {
-            // Refresh token
-            $newToken = JWTAuth::refresh(JWTAuth::getToken());
+            // Get user
+            if ($userId) {
+                // Get user by ID
+                $user = User::find($userId);
+            } else {
+                // Get user from authenticated user
+                $userId = auth()->user()->id;
+                $user = User::find($userId);
+            }
 
-            // Return success response
+            if ($user) {
+                // Refresh token
+                $newToken = JWTAuth::refresh(JWTAuth::getToken());
+
+                // Return success response
+                return response()->json([
+                    "status" => true,
+                    "message" => "New token refreshed successfully",
+                    "token" => $newToken
+                ]);
+            }
+
+            // Return error response
             return response()->json([
-                "status" => true,
-                "message" => "New token refreshed successfully",
-                "token" => $newToken
+                "status" => false,
+                "message" => "User not found"
             ]);
         } catch (\Exception $e) {
             // Catch any exceptions and return error response
@@ -213,6 +233,7 @@ class UserController extends Controller
                     "facebook" => $request->facebook,
                     "instagram" => $request->instagram,
                     "twitter" => $request->twitter,
+                    "updated_at" => now(),
                 ]);
 
                 // Return success response
@@ -257,6 +278,11 @@ class UserController extends Controller
                 // Delete associated member
                 if (!empty($user->member)) {
                     $user->member->delete();
+
+                 // Delete associated activities
+                    if (!empty($user->member->activities)) {
+                        $user->member->activities()->delete();
+                    }
                 }
 
                 // Delete associated trainer record

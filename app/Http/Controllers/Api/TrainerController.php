@@ -36,6 +36,7 @@ class TrainerController extends Controller
                 'rate_amount' => $request->rate_amount,
                 'stripe_id' => '234567',
                 'stripe_url' => 'stripeTrainer@stripe.com',
+                'timestamp' => now(),
             ]);
 
             // Get trainer
@@ -65,7 +66,7 @@ class TrainerController extends Controller
     }
 
     // Get trainer
-    public function getTrainer($userId)
+    public function getTrainer($userId = null)
     {
         try {
             // Get trainer
@@ -102,7 +103,7 @@ class TrainerController extends Controller
     }
 
     // Update trainer
-    public function updateTrainer(Request $request, $userId)
+    public function updateTrainer(Request $request, $userId = null)
     {
         try {
             // Validate request
@@ -137,6 +138,7 @@ class TrainerController extends Controller
                     'rate_currency' => $request->rate_currency,
                     'rate_amount' => $request->rate_amount,
                     'content_about' => $request->content_about,
+                    'updated_at' => now(),
                 ]);
 
                 // Return success response

@@ -15,6 +15,8 @@ class AdminController extends Controller
             // Create admin
             Admin::create([
                 'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             // Get admin

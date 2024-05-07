@@ -26,6 +26,8 @@ class MemberController extends Controller
                 'home_club_address' => $request->home_club_address,
                 'fitness_level' => $request->fitness_level,
                 'workout_types' => $request->workout_types,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             // Get member
@@ -119,6 +121,7 @@ class MemberController extends Controller
                     'home_club_address' => $request->home_club_address,
                     'fitness_level' => $request->fitness_level,
                     'workout_types' => $request->workout_types,
+                    'updated_at' => now(),
                 ]);
 
                 // Return success response
