@@ -18,6 +18,11 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/user/login', [UserController::class, 'login'])->name('user.login'); // Login user
 
+// GET ALL ROUTES
+Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
+Route::get('/members', [MemberController::class, 'getAllMembers'])->name('members.get'); // Get all members
+Route::get('/trainers', [TrainerController::class, 'getAllTrainers'])->name('trainers.get'); // Get all trainers
+
 // ------- PROTECTED ROUTES -------
 Route::group([
     'middleware' => 'auth:api',
@@ -41,7 +46,6 @@ Route::group([
 
         // NEEDS TO BE FIXED
         Route::post('/register', [UserController::class, 'register'])->name('user.register'); // Register new user
-        Route::get('/all', [UserController::class, 'getAllUsers'])->name('user.get.all'); // Get all users
 
         Route::delete('/{id}', [UserController::class, 'deleteUser'])->name('user.delete'); // Delete user
     });
@@ -50,7 +54,6 @@ Route::group([
     // Admin Routes (only for admins)
     Route::middleware(['admin'])->prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get admin
-        Route::get('/all', [AdminController::class, 'getAllAdmins'])->name('admin.get.all'); // Get all admins
     });
 
     // ----- MEMBER ROUTES -----
@@ -62,7 +65,6 @@ Route::group([
     // Member Routes (only for admins)
     Route::middleware(['admin'])->prefix('member')->group(function () {
         Route::get('/{id}', [MemberController::class, 'getMember'])->name('member.get'); // Get member
-        Route::get('/all', [MemberController::class, 'getAllMembers'])->name('admin.member.get.all'); // Get all members
     });
 
     // ----- TRAINER ROUTES -----
@@ -76,9 +78,8 @@ Route::group([
 
         // NEEDS user/register API TO BE FIXED
         Route::post('/', [TrainerController::class, 'createTrainer'])->name('admin.trainer.create'); // Create trainer
-        // NEEDS TO BE FIXED
-        Route::get('/all', [TrainerController::class, 'getAllTrainers'])->name('admin.trainer.get.all'); // Get all trainers           
 
+        // NEEDS TO BE FIXED        
         Route::get('/{id}', [TrainerController::class, 'getTrainer'])->name('admin.trainer.get'); // Get trainer
     });
 });

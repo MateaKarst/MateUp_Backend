@@ -325,16 +325,16 @@ class UserController extends Controller
         try {
             // Get all users
             $users = User::all();
-
+    
             // Check if users exist
-            if ($users) {
+            if ($users->isNotEmpty()) {
                 // Return success response
                 return response()->json([
                     "status" => true,
                     "users" => $users
                 ]);
             }
-
+    
             // Return error response
             return response()->json([
                 "status" => false,
@@ -348,4 +348,5 @@ class UserController extends Controller
             ]);
         }
     }
+    
 }
