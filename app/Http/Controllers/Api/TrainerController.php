@@ -66,28 +66,30 @@ class TrainerController extends Controller
     }
 
     // Get trainer
-    public function getTrainer($userId = null)
+    public function getTrainer($trainerId = null)
     {
         try {
             // Get trainer
-            if ($userId) {
+            if ($trainerId) {
                 // Get trainer by user ID
-                $trainer = Trainer::where('user_id', $userId)->first();
+                $trainer = Trainer::where('id', $trainerId)->first();
             } else {
-                // Get trainer from authenticated user
-                $userId = auth()->user()->id;
-                $trainer = Trainer::where('user_id', $userId)->first();
+                // Get id from authenticated use
+                $trainer = Trainer::where('user_id', auth()->user()->id)->first(); // Get trainer from authenticated use               
             }
 
             // Check if trainer exists
             if ($trainer) {
-                // Return success response
+                // Manually load user relationship
+                $trainer->load('user');
+    
+                // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'trainer' => $trainer,
                 ]);
             }
-
+    
             // Return error response
             return response()->json([
                 'status' => false,
@@ -101,6 +103,7 @@ class TrainerController extends Controller
             ]);
         }
     }
+    
 
     // Update trainer
     public function updateTrainer(Request $request, $userId = null)
@@ -116,17 +119,16 @@ class TrainerController extends Controller
                 'rate_currency' => 'required',
                 'rate_amount' => 'required',
             ]);
-
+    
             // Get trainer
             if ($userId) {
                 // Get trainer by user ID
-                $trainer = Trainer::where('user_id', $userId)->first();
+                $trainer = Trainer::where('id', $userId)->first();
             } else {
                 // Get trainer from authenticated user
-                $userId = auth()->user()->id;
-                $trainer = Trainer::where('user_id', $userId)->first();
+                $trainer = Trainer::where('user_id', auth()->user()->id)->first();
             }
-
+    
             // Check if trainer exists
             if ($trainer) {
                 // Update trainer
@@ -140,15 +142,18 @@ class TrainerController extends Controller
                     'content_about' => $request->content_about,
                     'updated_at' => now(),
                 ]);
-
-                // Return success response
+    
+                // Manually load user relationship
+                $trainer->load('user');
+    
+                // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'message' => 'Trainer updated successfully',
                     'trainer' => $trainer,
                 ]);
             }
-
+    
             // Return error response
             return response()->json([
                 'status' => false,
@@ -163,56 +168,16 @@ class TrainerController extends Controller
         }
     }
 
-    // Delete trainer
-    public function deleteTrainer($userId)
-    {
-        try {
-            // Get trainer
-            if ($userId) {
-                // Get trainer by user ID
-                $trainer = Trainer::where('user_id', $userId)->first();
-            } else {
-                // Get trainer from authenticated user
-                $userId = auth()->user()->id;
-                $trainer = Trainer::where('user_id', $userId)->first();
-            }
-
-            // Check if trainer exists
-            if ($trainer) {
-                // Delete trainer
-                $trainer->delete();
-
-                // Return success response
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Trainer deleted successfully',
-                ]);
-            }
-
-            // Return error response
-            return response()->json([
-                'status' => false,
-                'message' => 'Trainer not deleted',
-            ]);
-        } catch (\Exception $e) {
-            // Catch any exceptions and return error response
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
     // Get all trainers
     public function getAllTrainers()
     {
         try {
-            // Get trainers
-            $trainers = Trainer::all();
+            // Get trainers with user information eager loaded
+            $trainers = Trainer::with('user')->get();
 
             // Check if trainers exist
-            if ($trainers) {
-                // Return success response
+            if ($trainers->isNotEmpty()) {
+                // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'trainers' => $trainers,

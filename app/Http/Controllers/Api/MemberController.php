@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Member;
 
+
 class MemberController extends Controller
 {
 
@@ -57,28 +58,30 @@ class MemberController extends Controller
     }
 
     // Get member
-    public function getMember($userId = null)
+    public function getMember($memberId = null)
     {
         try {
             // Get member
-            if ($userId) {
-                // Get member by user ID
-                $member = Member::where('user_id', $userId)->first();
+            if ($memberId) {
+                // Get member by member ID
+                $member = Member::where('id', $memberId)->first();
             } else {
                 // Get member from authenticated user
-                $userId = auth()->user()->id;
-                $member = Member::where('user_id', $userId)->first();
+                $member = Member::where('user_id', auth()->user()->id)->first();
             }
-
+    
             // Check if member exists
             if ($member) {
-                // Return success response
+                // Manually load user relationship
+                $member->load('user');
+    
+                // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'member' => $member,
                 ]);
             }
-
+    
             // Return error response
             return response()->json([
                 'status' => false,
@@ -91,10 +94,10 @@ class MemberController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-    }
+    }    
 
     // Update member
-    public function updateMember(Request $request, $userId = null)
+    public function updateMember(Request $request, $memberId = null)
     {
         try {
             // Validate request
@@ -105,13 +108,12 @@ class MemberController extends Controller
             ]);
 
             // Get member
-            if ($userId) {
-                // Get member by user ID
-                $member = Member::where('user_id', $userId)->first();
+            if ($memberId) {
+                // Get member by member ID
+                $member = Member::where('id', $memberId)->first();
             } else {
                 // Get member from authenticated user
-                $userId = auth()->user()->id;
-                $member = Member::where('user_id', $userId)->first();
+                $member = Member::where('user_id', auth()->user()->id)->first();
             }
 
             // Check if member exists
@@ -124,7 +126,10 @@ class MemberController extends Controller
                     'updated_at' => now(),
                 ]);
 
-                // Return success response
+                // Eager load user information
+                $member->load('user');
+
+                // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'message' => 'Member updated successfully',
@@ -146,72 +151,32 @@ class MemberController extends Controller
         }
     }
 
-    // Delete member
-    public function deleteMember($userId)
-    {
-        try {
-            // Get member
-            if ($userId) {
-                // Get member by user ID
-                $member = Member::where('user_id', $userId)->first();
-            } else {
-                // Get member from authenticated user
-                $userId = auth()->user()->id;
-                $member = Member::where('user_id', $userId)->first();
-            }
-
-            // Check if member exists
-            if ($member) {
-                // Delete member
-                $member->delete();
-
-                // Return success response
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Member deleted successfully',
-                ]);
-            }
-
-            // Return error response
-            return response()->json([
-                'status' => false,
-                'message' => 'Member not deleted',
-            ]);
-        } catch (\Exception $e) {
-            // Catch any exceptions and return error response
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
     // Get all members
     public function getAllMembers()
     {
         try {
             // Get all members
-            $members = Member::all();
+            $members = Member::with('user')->get();
 
             // Check if members exist
-            if ($members) {
+            if ($members->isNotEmpty()) {
                 // Return success response
                 return response()->json([
-                    'status' => true,
-                    'members' => $members,
+                    "status" => true,
+                    "members" => $members
                 ]);
             }
 
             // Return error response
             return response()->json([
-                'status' => false,
-                'message' => 'No members found',
+                "status" => false,
+                "message" => "Members not found"
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 // Catch any exceptions and return error response
-                'status' => false,
-                'message' => $e->getMessage()
+                "status" => false,
+                "message" => $e->getMessage()
             ]);
         }
     }

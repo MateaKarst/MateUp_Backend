@@ -46,68 +46,30 @@ class AdminController extends Controller
     }
 
     // Get admin
-    public function getAdmin($userId = null)
+    public function getAdmin($adminId = null)
     {
         try {
             // Get admin
-            if ($userId) {
+            if ($adminId) {
                 // Get admin by user ID
-                $admin = Admin::where('user_id', $userId)->first();
+                $admin = Admin::where('id', $adminId)->first();               
             } else {
                 // Get admin from authenticated user
-                $userId = auth()->user()->id;
-                $admin = Admin::where('user_id', $userId)->first();
+                $admin = Admin::where('user_id', auth()->user()->id)->first();
             }
-
+    
             // Check if admin exists
             if ($admin) {
-                // Return success response
+                // Manually load user relationship
+                $admin->load('user');
+    
+                // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'admin' => $admin,
                 ]);
             }
-
-            // Return error response
-            return response()->json([
-                'status' => false,
-                'message' => 'Admin not found',
-            ]);
-        } catch (\Exception $e) {
-            // Catch any exceptions and return error response
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
-    // Delete admin
-    public function deleteAdmin($userId = null)
-    {
-        try {
-            // Get admin
-            if ($userId) {
-                // Get admin by user ID
-                $admin = Admin::where('user_id', $userId)->first();
-            } else {
-                // Get admin from authenticated user
-                $userId = auth()->user()->id;
-                $admin = Admin::where('user_id', $userId)->first();
-            }
-
-            // Check if admin exists
-            if ($admin) {
-                // Delete admin
-                $admin->delete();
-
-                // Return success response
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Admin deleted successfully',
-                ]);
-            }
-
+    
             // Return error response
             return response()->json([
                 'status' => false,
@@ -126,18 +88,18 @@ class AdminController extends Controller
     public function getAllAdmins()
     {
         try {
-            // Get admins
-            $admins = Admin::all();
-
+            // Get admins with user information eager loaded
+            $admins = Admin::with('user')->get();
+    
             // Check if admins exist
-            if ($admins) {
-                // Return success response
+            if ($admins->isNotEmpty()) {
+                // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'admins' => $admins,
                 ]);
             }
-
+    
             // Return error response
             return response()->json([
                 'status' => false,
@@ -151,4 +113,5 @@ class AdminController extends Controller
             ]);
         }
     }
+    
 }
