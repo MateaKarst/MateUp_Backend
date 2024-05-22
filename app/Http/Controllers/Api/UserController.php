@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserController extends Controller
 {
@@ -61,29 +62,22 @@ class UserController extends Controller
                 "password" => "required"
             ]);
 
-            // Get token
-            $token = JWTAuth::attempt([
-                "email" => $request->email,
-                "password" => $request->password
-            ]);
-
-            // Check if token exists
-            if (!empty($token)) {
-                // Return success response
+            // Attempt to generate token
+            if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
                 return response()->json([
-                    "status" => true,
-                    "message" => "User logged in successfully",
-                    "token" => $token
+                    "status" => false,
+                    "message" => "Invalid credentials"
                 ]);
             }
 
-            // Return error response
+            // Return success response with token
             return response()->json([
-                "status" => false,
-                "message" => "Invalid credentials"
+                "status" => true,
+                "message" => "User logged in successfully",
+                "token" => $token
             ]);
-        } catch (\Exception $e) {
-            // Catch any exceptions and return error response
+        } catch (JWTException $e) {
+            // Catch JWT exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -95,16 +89,16 @@ class UserController extends Controller
     public function logout()
     {
         try {
-            // Logout
-            auth()->logout();
+            // Invalidate token
+            JWTAuth::invalidate(JWTAuth::getToken());
 
             // Return success response
             return response()->json([
                 "status" => true,
                 "message" => "User logged out successfully"
             ]);
-        } catch (\Exception $e) {
-            // Catch any exceptions and return error response
+        } catch (JWTException $e) {
+            // Catch JWT exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -279,7 +273,7 @@ class UserController extends Controller
                 if (!empty($user->member)) {
                     $user->member->delete();
 
-                 // Delete associated activities
+                    // Delete associated activities
                     if (!empty($user->member->activities)) {
                         $user->member->activities()->delete();
                     }
@@ -325,7 +319,7 @@ class UserController extends Controller
         try {
             // Get all users
             $users = User::all();
-    
+
             // Check if users exist
             if ($users->isNotEmpty()) {
                 // Return success response
@@ -334,7 +328,7 @@ class UserController extends Controller
                     "users" => $users
                 ]);
             }
-    
+
             // Return error response
             return response()->json([
                 "status" => false,
@@ -348,5 +342,4 @@ class UserController extends Controller
             ]);
         }
     }
-    
 }

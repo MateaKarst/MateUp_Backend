@@ -6,23 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-// Run the migrations.
+    // Run the migrations.
     public function up(): void
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->integer('home_club_address');
-            
-            $table->enum('fitness_level', ['beginner', 'intermediate', 'advanced']);
             $table->string('workout_types')->nullable();
-
+            $table->enum('level_fitness', ['beginner', 'intermediate', 'advanced']);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->nullable();
         });
     }
 
-// Reverse the migrations.
+    // Reverse the migrations.
     public function down(): void
     {
         Schema::dropIfExists('members');

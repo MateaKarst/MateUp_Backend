@@ -16,7 +16,20 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/user/login', [UserController::class, 'login'])->name('user.login'); // Login user
+Route::post('/login', [UserController::class, 'login'])->name('user.login'); // Login user
+
+Route::middleware(['customAuth'])->group(function () {
+    Route::post('/logout', [UserController::class, 'logout'])->name('user.logout'); // Logout user
+    Route::post('/register', [UserController::class, 'register'])->name('user.register'); // Register new user
+    Route::post('/', [TrainerController::class, 'createTrainer'])->name('admin.trainer.create'); // Create trainer
+});
+
+
+
+// Route::post('/login', [UserController::class, 'login'])->name('user.login'); // Login user
+// Route::post('/register', [UserController::class, 'register'])->name('user.register'); // Register new user
+// Route::post('/', [TrainerController::class, 'createTrainer'])->name('admin.trainer.create'); // Create trainer
+// Route::post('/logout', [UserController::class, 'logout'])->name('user.logout'); // Logout user
 
 // GET ALL ROUTES
 Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
@@ -36,17 +49,11 @@ Route::group([
         Route::put('/', [UserController::class, 'updateUser'])->name('user.update'); // Update user
         Route::delete('/', [UserController::class, 'deleteUser'])->name('user.delete'); // Delete user
         Route::post('/refresh-token', [UserController::class, 'refreshToken'])->name('token.refresh'); // Refresh token
-
-        // NEEDS TO BE FIXED
-        Route::post('/logout', [UserController::class, 'logout'])->name('user.logout'); // Logout user
     });
     // User Routes (only for admins)
     Route::middleware(['admin'])->prefix('user')->group(function () {
         Route::get('/{id}', [UserController::class, 'getUser'])->name('user.get'); // Get another user
-        Route::delete('/{id}', [UserController::class, 'deleteUser'])->name('user.delete'); // Delete user
-
-        // NEEDS TO BE FIXED
-        Route::post('/register', [UserController::class, 'register'])->name('user.register'); // Register new user
+        Route::delete('/{id}', [UserController::class, 'deleteUser'])->name('user.delete'); // Delete user       
     });
 
     // ----- ADMIN ROUTES ----- 
@@ -74,11 +81,6 @@ Route::group([
     });
     // Trainer Routes (only for admins)
     Route::middleware(['admin'])->prefix('trainer')->group(function () {
-
-        // NEEDS user/register API TO BE FIXED
-        Route::post('/', [TrainerController::class, 'createTrainer'])->name('admin.trainer.create'); // Create trainer
-
-        // NEEDS TO BE FIXED        
         Route::get('/{id}', [TrainerController::class, 'getTrainer'])->name('admin.trainer.get'); // Get trainer
     });
 });

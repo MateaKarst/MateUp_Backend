@@ -13,7 +13,7 @@ class Member extends Model
     protected $fillable = [
         'user_id',
         'home_club_address',
-        'fitness_level',
+        'level_fitness',
         'workout_types',
         'created_at',
         'updated_at',

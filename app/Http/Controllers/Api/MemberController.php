@@ -17,7 +17,8 @@ class MemberController extends Controller
             // Validate request
             $request->validate([
                 'home_club_address' => 'required',
-                'fitness_level' => 'required',
+                'workout_types' => 'required',
+                'level_fitness' => 'required',
                 'workout_types' => 'required',
             ]);
 
@@ -25,7 +26,7 @@ class MemberController extends Controller
             Member::create([
                 'user_id' => $userId,
                 'home_club_address' => $request->home_club_address,
-                'fitness_level' => $request->fitness_level,
+                'level_fitness' => $request->level_fitness,
                 'workout_types' => $request->workout_types,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -69,19 +70,19 @@ class MemberController extends Controller
                 // Get member from authenticated user
                 $member = Member::where('user_id', auth()->user()->id)->first();
             }
-    
+
             // Check if member exists
             if ($member) {
                 // Manually load user relationship
                 $member->load('user');
-    
+
                 // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'member' => $member,
                 ]);
             }
-    
+
             // Return error response
             return response()->json([
                 'status' => false,
@@ -94,7 +95,7 @@ class MemberController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-    }    
+    }
 
     // Update member
     public function updateMember(Request $request, $memberId = null)
@@ -103,7 +104,7 @@ class MemberController extends Controller
             // Validate request
             $request->validate([
                 'home_club_address' => 'required',
-                'fitness_level' => 'required',
+                'level_fitness' => 'required',
                 'workout_types' => 'required',
             ]);
 
@@ -121,7 +122,7 @@ class MemberController extends Controller
                 // Update member
                 $member->update([
                     'home_club_address' => $request->home_club_address,
-                    'fitness_level' => $request->fitness_level,
+                    'level_fitness' => $request->level_fitness,
                     'workout_types' => $request->workout_types,
                     'updated_at' => now(),
                 ]);

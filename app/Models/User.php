@@ -100,7 +100,7 @@ class User extends Authenticatable implements JWTSubject
                 Member::create([
                     'user_id' => $user->id,
                     'home_club_address' => '1',
-                    'fitness_level' => 'beginner'
+                    'level_fitness' => 'beginner'
                 ]);
             }
 
