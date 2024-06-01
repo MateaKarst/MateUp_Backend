@@ -6,15 +6,34 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
 
 class UserController extends Controller
 {
     // Create and Register new user
-    public function register(Request $request)
+    public function register(Request $request, $userId = null)
     {
+
         try {
+            // Get admin user
+            if ($userId) {
+                // Get user by ID
+                $admin = User::find($userId);
+            } else {
+                // Get authenticated admin user
+                $admin = auth()->user();
+            }
+
+            // Check if admin user exists and has necessary permissions
+            if (!$admin || $admin->role !== 'admin' || $admin->user_token === null) {
+                return response()->json([
+                    "status" => false,
+                    "message" => "Unauthorized access"
+                ], 401);
+            }
+
             // Validate request
             $request->validate([
                 "role" => "required",
@@ -25,8 +44,9 @@ class UserController extends Controller
                 "phone" => "required",
             ]);
 
+
             // Create user
-            User::create([
+            $registeringUser = User::create([
                 "role" => $request->role,
                 "username" => $request->name . $request->surname,
                 "email" => $request->email,
@@ -41,7 +61,9 @@ class UserController extends Controller
             // Return success response
             return response()->json([
                 "status" => true,
-                "message" => "User created successfully"
+                "message" => "User created successfully",
+                "user" => $admin,
+                "new user" => $registeringUser
             ]);
         } catch (\Exception $e) {
             // Catch any exceptions and return error response
@@ -57,27 +79,37 @@ class UserController extends Controller
     {
         try {
             // Validate request
-            $request->validate([
+            $credentials = $request->validate([
                 "email" => "required|email",
                 "password" => "required"
             ]);
 
-            // Attempt to generate token
-            if (!$token = JWTAuth::attempt($request->only('email', 'password'))) {
+            // Attempt to log in with session authentication
+            if (Auth::attempt($credentials)) {
+                // Generate a unique token
+                $token = Str::random(60);
+
+                // Get the authenticated user
+                $user = User::find(Auth::id());
+
+                // Store the token in the database
+                $user->user_token = hash('sha256', $token);
+                $user->save();
+
+                // Return success response with token
+                return response()->json([
+                    "status" => true,
+                    "message" => "User logged in successfully",
+                    "userToken" => $token
+                ]);
+            } else {
                 return response()->json([
                     "status" => false,
                     "message" => "Invalid credentials"
                 ]);
             }
-
-            // Return success response with token
-            return response()->json([
-                "status" => true,
-                "message" => "User logged in successfully",
-                "token" => $token
-            ]);
-        } catch (JWTException $e) {
-            // Catch JWT exceptions and return error response
+        } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 "status" => false,
                 "message" => $e->getMessage()
@@ -86,56 +118,30 @@ class UserController extends Controller
     }
 
     // Logout user
-    public function logout()
+    public function logout(Request $request)
     {
         try {
-            // Invalidate token
-            JWTAuth::invalidate(JWTAuth::getToken());
+            // Get the authenticated user
+            $user = $request->user();
+
+            // get the user token
+            $userToken = $user->user_token;
+
+            if (!$userToken) {
+                return response()->json([
+                    "status" => false,
+                    "message" => "User is not logged in"
+                ]);
+            }
+
+            // Clear the user_token
+            $user->user_token = null;
+            $user->save();
 
             // Return success response
             return response()->json([
                 "status" => true,
-                "message" => "User logged out successfully"
-            ]);
-        } catch (JWTException $e) {
-            // Catch JWT exceptions and return error response
-            return response()->json([
-                "status" => false,
-                "message" => $e->getMessage()
-            ]);
-        }
-    }
-
-    // Refresh token
-    public function refreshToken($userId = null)
-    {
-        try {
-            // Get user
-            if ($userId) {
-                // Get user by ID
-                $user = User::find($userId);
-            } else {
-                // Get user from authenticated user
-                $userId = auth()->user()->id;
-                $user = User::find($userId);
-            }
-
-            if ($user) {
-                // Refresh token
-                $newToken = JWTAuth::refresh(JWTAuth::getToken());
-
-                // Return success response
-                return response()->json([
-                    "status" => true,
-                    "message" => "New token refreshed successfully",
-                    "token" => $newToken
-                ]);
-            }
-
-            // Return error response
-            return response()->json([
-                "status" => false,
-                "message" => "User not found"
+                "message" => "User logged out successfully",
             ]);
         } catch (\Exception $e) {
             // Catch any exceptions and return error response

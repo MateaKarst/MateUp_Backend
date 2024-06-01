@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'trainer' => \App\Http\Middleware\TrainerMiddleware::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'customAuth' => \App\Http\Middleware\AuthMiddleware::class,
+            'api-session' => \Illuminate\Session\Middleware\StartSession::class,
+            'password-protected' => \App\Http\Middleware\PasswordProtected::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

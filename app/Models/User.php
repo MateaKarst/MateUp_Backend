@@ -32,6 +32,7 @@ class User extends Authenticatable implements JWTSubject
         'twitter',
         'created_at',
         'updated_at',
+        'user_token'
     ];
 
     // Attributes that should be hidden for serialization.
