@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\TrainerController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\Api\BuddiesController;
 use GuzzleHttp\Middleware;
 
 // API Routes
@@ -107,6 +108,16 @@ Route::group([
         Route::middleware(['admin'])->group(function () {
             Route::post('/register', [UserController::class, 'register']);
         });
+    });
+
+    // Buddy Routes
+    Route::prefix('buddy')->group(function () {
+        Route::post('/add/{buddyId}', [BuddiesController::class, 'addBuddy'])->name('buddy.add');
+        Route::post('/accept/{buddyId}', [BuddiesController::class, 'acceptBuddy'])->name('buddy.accept');
+        Route::post('/reject/{buddyId}', [BuddiesController::class, 'rejectBuddy'])->name('buddy.reject');
+        Route::post('/remove/{buddyId}', [BuddiesController::class, 'removeBuddy'])->name('buddy.remove');
+        Route::get('/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get');
+        Route::get('/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get');
     });
 });
 

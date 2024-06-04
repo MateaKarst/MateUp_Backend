@@ -85,6 +85,15 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function buddies()
+    {
+        return $this->hasMany(Buddies::class, 'user_id');
+    }
+
+    public function buddyBuddies()
+    {
+        return $this->hasMany(Buddies::class, 'buddy_id');
+    }
 
     // Create user profiles automatically --> member and admin
     protected static function boot()
@@ -112,6 +121,12 @@ class User extends Authenticatable implements JWTSubject
                     'user_id' => $user->id
                 ]);
             }
+        });
+
+        static::deleting(function ($user) {
+            // Delete all buddy relationships where the user is either user_id or buddy_id
+            $user->buddies()->delete();
+            $user->buddyBuddies()->delete();
         });
     }
 }

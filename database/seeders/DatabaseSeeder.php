@@ -265,5 +265,36 @@ class DatabaseSeeder extends Seeder
                 'rate_amount' => $userMemberFaker->randomFloat(2, 10, 100),
             ]);
         }
+
+        // BUDDIES
+        $buddiesFaker = Faker::create();
+
+        // Get all users
+        $users = User::all();
+
+        // Generate buddies
+        foreach ($users as $user) {
+            // Determine the number of buddies for each user
+            $buddiesCount = $buddiesFaker->numberBetween(1, 5);
+
+            // Get random buddies
+            $buddies = $users->random($buddiesCount)->pluck('id')->toArray();
+
+            foreach ($buddies as $buddyId) {
+                // Ensure the buddy relationship is unique and not with themselves
+                if ($user->id !== $buddyId && !DB::table('buddies')->where([
+                    ['user_id', $user->id],
+                    ['buddy_id', $buddyId],
+                ])->exists()) {
+                    DB::table('buddies')->insert([
+                        'user_id' => $user->id,
+                        'buddy_id' => $buddyId,
+                        'status' => 'accepted',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
     }
 }
