@@ -36,16 +36,20 @@ class DatabaseSeeder extends Seeder
         $userMemberFaker = Faker::create();
 
         $profileImagesMember = [
-            'https://ogletree.com/app/uploads/people/Shirin-Aboujawde.jpg',
-            'https://ogletree.com/app/uploads/people/abitbol-alexandre-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/kyle-t-abraham-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/justine-l-abrams-2023-04.jpg',
-            'https://ogletree.com/app/uploads/2023/04/marielly-abzun-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/elizabeth-d-adamek-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/paul-lancaster-adams-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/kenneth-m-adams-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/alison-k-adelman-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/daniel-a-adlong-1-2023-04.jpg',
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
 
             // 'https://ogletree.com/app/uploads/people/margaret-carroll-alli-2023-04.jpg',
             // 'https://ogletree.com/app/uploads/people/emma-allison.jpg',
@@ -190,16 +194,20 @@ class DatabaseSeeder extends Seeder
         ];
 
         $profileImagesTrainer = [
-            'https://ogletree.com/app/uploads/people/daniel-a-adlong-1-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/rodolfo-r-agraz-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/carmen-m-aguado-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/leticia-letty-p-aguilar-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/hassan-ahtouch-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/jean-marc-albiol-2023-04.jpg',
-            'https://ogletree.com/app/uploads/2023/04/heba-alhassan-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/allen-nathan-gray-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/justin-a-allen-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/jerod-a-allen.jpg',
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
         ];
         $usedProfileImagesTrainer = [];
 
