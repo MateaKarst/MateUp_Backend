@@ -117,7 +117,6 @@ Route::group([
         Route::post('/reject/{buddyId}', [BuddiesController::class, 'rejectBuddy'])->name('buddy.reject');
         Route::post('/remove/{buddyId}', [BuddiesController::class, 'removeBuddy'])->name('buddy.remove');
         Route::get('/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get');
-        Route::get('/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get');
     });
 });
 
@@ -136,3 +135,4 @@ Route::get('/trainers', [TrainerController::class, 'getAllTrainers'])->name('tra
 Route::get('/trainer/{id}', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get a trainer
 Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.get'); // Get all admins
 Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin
+Route::get('/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get a user's buddies
