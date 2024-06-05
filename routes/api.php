@@ -136,3 +136,6 @@ Route::get('/trainer/{id}', [TrainerController::class, 'getTrainer'])->name('tra
 Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.get'); // Get all admins
 Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin
 Route::get('buddy/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get a user's buddies
+
+
+
