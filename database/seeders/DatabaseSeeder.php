@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
 
         $profileImagesMember = [
             "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
+            'https://ogletree.com/app/uploads/people/abitbol-alexandre-2023-04.jpg',
             'https://ogletree.com/app/uploads/people/kyle-t-abraham-2023-04.jpg',
             'https://ogletree.com/app/uploads/people/justine-l-abrams-2023-04.jpg',
             'https://ogletree.com/app/uploads/2023/04/marielly-abzun-2023-04.jpg',
