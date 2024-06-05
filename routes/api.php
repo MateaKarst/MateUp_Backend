@@ -18,7 +18,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/login', [UserController::class, 'login'])->name('user.login'); // Login user
+// Route::post('/login', [UserController::class, 'login'])->name('user.login'); // Login user
 
 Route::middleware(['customAuth'])->group(function () {
     Route::post('/logout', [UserController::class, 'logout'])->name('user.logout'); // Logout user
@@ -127,12 +127,12 @@ Route::group([
     'middleware' => 'api-session',
     'middleware' => 'password-protected',
 ], function () {
-    Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
-    Route::get('/user/{id}', [UserController::class, 'getUser'])->name('user.get'); // Get a user
-    Route::get('/members', [MemberController::class, 'getAllMembers'])->name('members.get'); // Get all members
-    Route::get('/member/{id}', [MemberController::class, 'getMember'])->name('member.get'); // Get a member
-    Route::get('/trainers', [TrainerController::class, 'getAllTrainers'])->name('trainers.get'); // Get all trainers
-    Route::get('/trainer/{id}', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get a trainer
-    Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.get'); // Get all admins
-    Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin
 });
+Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
+Route::get('/user/{id}', [UserController::class, 'getUser'])->name('user.get'); // Get a user
+Route::get('/members', [MemberController::class, 'getAllMembers'])->name('members.get'); // Get all members
+Route::get('/member/{id}', [MemberController::class, 'getMember'])->name('member.get'); // Get a member
+Route::get('/trainers', [TrainerController::class, 'getAllTrainers'])->name('trainers.get'); // Get all trainers
+Route::get('/trainer/{id}', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get a trainer
+Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.get'); // Get all admins
+Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin

@@ -199,7 +199,8 @@ class BuddiesController extends Controller
             // Get the user based on the provided userId or the authenticated user
             if ($userId) {
                 $user = User::where('user_token', $request->header('Authorization'))->first();
-                if (!$user || ($user->role !== 'admin' && $user->id != $userId)) {
+                //&& $user->id != $userId
+                if (!$user || ($user->role !== 'admin')) {
                     return response()->json(['message' => 'Unauthorized'], 401);
                 }
             } else {
