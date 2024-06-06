@@ -100,7 +100,7 @@ class UserController extends Controller
                 return response()->json([
                     "status" => true,
                     "message" => "User logged in successfully",
-                    "userToken" => $token
+                    "userToken" => $user -> user_token
                 ]);
             } else {
                 return response()->json([

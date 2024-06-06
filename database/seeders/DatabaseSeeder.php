@@ -21,41 +21,31 @@ class DatabaseSeeder extends Seeder
     // Run the database seeds.
     public function run(): void
     {
-        // Create admin user
-        User::create([
-            'role' => 'admin',
-            'username' => 'MainAdmin',
-            'email' => 'admin@localhost',
-            'password' => Hash::make('admin'),
-            'name' => 'Main',
-            'surname' => 'Admin',
-            'phone' => '000000001',
-        ]);
+        // // Create admin user
+        // User::create([
+        //     'role' => 'admin',
+        //     'username' => 'MainAdmin',
+        //     'email' => 'admin@localhost',
+        //     'password' => Hash::make('admin'),
+        //     'name' => 'Main',
+        //     'surname' => 'Admin',
+        //     'phone' => '000000001',
+        // ]);
 
         // MEMBER USERS
         $userMemberFaker = Faker::create();
 
         $profileImagesMember = [
-            "https://www.perfocal.com/blog/content/images/size/…/01/Perfocal_17-11-2019_TYWFAQ_100_standard-3.jpg",
-            'https://ogletree.com/app/uploads/people/abitbol-alexandre-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/kyle-t-abraham-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/justine-l-abrams-2023-04.jpg',
-            'https://ogletree.com/app/uploads/2023/04/marielly-abzun-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/elizabeth-d-adamek-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/paul-lancaster-adams-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/kenneth-m-adams-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/alison-k-adelman-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/daniel-a-adlong-1-2023-04.jpg',
-
-            // 'https://ogletree.com/app/uploads/people/margaret-carroll-alli-2023-04.jpg',
-            // 'https://ogletree.com/app/uploads/people/emma-allison.jpg',
-            // 'https://ogletree.com/app/uploads/people/amlani-fauzia-gray-2023-04.jpg',
-            // 'https://ogletree.com/app/uploads/people/maria-anastas-2023-04.jpg',
-            // 'https://ogletree.com/app/uploads/people/emily-rupp-anderson-2023-04.jpg',
-            // 'https://ogletree.com/app/uploads/people/corie-j-anderson.jpg',
-            // 'https://ogletree.com/app/uploads/people/andrews-ann-gray-2023-04.jpg',
-            // 'https://ogletree.com/app/uploads/people/deborah-andrews-2023-04.jpg',
-            // 'https://ogletree.com/app/uploads/people/omar-m-aniff-2023-04.jpg',
+            'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+            'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1310522/pexels-photo-1310522.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/432059/pexels-photo-432059.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/943084/pexels-photo-943084.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/678783/pexels-photo-678783.jpeg?auto=compress&cs=tinysrgb&w=600',
         ];
         $usedProfileImagesMember = [];
 
@@ -190,16 +180,16 @@ class DatabaseSeeder extends Seeder
         ];
 
         $profileImagesTrainer = [
-            'https://ogletree.com/app/uploads/people/daniel-a-adlong-1-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/rodolfo-r-agraz-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/carmen-m-aguado-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/leticia-letty-p-aguilar-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/hassan-ahtouch-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/jean-marc-albiol-2023-04.jpg',
-            'https://ogletree.com/app/uploads/2023/04/heba-alhassan-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/allen-nathan-gray-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/justin-a-allen-2023-04.jpg',
-            'https://ogletree.com/app/uploads/people/jerod-a-allen.jpg',
+            'https://images.pexels.com/photos/1278566/pexels-photo-1278566.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1499327/pexels-photo-1499327.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1821095/pexels-photo-1821095.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1819483/pexels-photo-1819483.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/1239288/pexels-photo-1239288.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/2613260/pexels-photo-2613260.jpeg?auto=compress&cs=tinysrgb&w=600',
+            'https://images.pexels.com/photos/6801642/pexels-photo-6801642.jpeg?auto=compress&cs=tinysrgb&w=600',
         ];
         $usedProfileImagesTrainer = [];
 

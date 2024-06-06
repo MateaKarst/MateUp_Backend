@@ -137,5 +137,4 @@ Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.ge
 Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin
 Route::get('/buddy/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get a user's buddies
 
-
-
+Route::get('/buddy/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get');

@@ -198,15 +198,16 @@ class BuddiesController extends Controller
         try {
             // Get the user based on the provided userId or the authenticated user
             if ($userId) {
-                // get user from user id
                 $user = User::find($userId);
-                // $user = User::where('user_token', $request->header('Authorization'))->first();
-                //&& $user->id != $userId
-                // if (!$user || ($user->role !== 'admin')) {
-                //     return response()->json(['message' => 'Unauthorized'], 401);
-                // }
+                if (!$user || ($user->role !== 'admin' && $user->id != $userId)) {
+                    return response()->json(['message' => 'Unauthorized'], 401);
+                }
             } else {
-                $user = auth()->user();
+                // Retrieve the user based on the authentication token
+                $user = User::where('user_token', $request->bearerToken())->first();
+                if (!$user) {
+                    return response()->json(['message' => 'Unauthorized'], 401);
+                }
             }
 
             // Check if user exists
@@ -223,8 +224,22 @@ class BuddiesController extends Controller
                 ->with(['user', 'buddy'])
                 ->get();
 
+            // Create a collection of unique buddies
+            $uniqueBuddies = collect();
+
+            foreach ($buddies as $buddy) {
+                if ($buddy->user_id === $user->id) {
+                    $uniqueBuddies->push($buddy->buddy);
+                } else {
+                    $uniqueBuddies->push($buddy->user);
+                }
+            }
+
+            // Remove duplicate buddies
+            $uniqueBuddies = $uniqueBuddies->unique('id')->values();
+
             return response()->json([
-                'buddies' => $buddies
+                'buddies' => $uniqueBuddies
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
