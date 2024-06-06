@@ -12,8 +12,8 @@ return new class extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->integer('home_club_address');
-            $table->string('workout_types')->nullable();
+            $table->string('home_club_address');
+            $table->json('workout_types')->nullable();
             $table->enum('level_fitness', ['beginner', 'intermediate', 'advanced']);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->nullable();

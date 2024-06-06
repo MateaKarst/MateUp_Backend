@@ -102,18 +102,19 @@ class DatabaseSeeder extends Seeder
                 'Strength Training',
                 'Core Workouts',
             ];
-
+            
             // Retrieve all members
             $members = Member::all();
             foreach ($members as $member) {
-                // Select a random workout type
-                $randomWorkout = $workouts[array_rand($workouts)];
-
-                // Update the member with the selected workout type
-                $member->workout_types = $randomWorkout;
+                // Select two random workout types
+                $randomWorkouts = array_rand(array_flip($workouts), 2);
+            
+                // Update the member with the selected workout types
+                $member->workout_types = implode(', ', $randomWorkouts);
                 $member->save();
             }
         }
+            
 
         // TRAINER USERS
         $trainerData = [
@@ -242,9 +243,18 @@ class DatabaseSeeder extends Seeder
             ]);
             $usedProfileImagesTrainer[] = $randomImageUrlTrainer;
 
+            $addresses = [
+                'Bruul 107, 2800 Mechelen',
+                'Zwartzustersvest 21/22, 2800 Mechelen',
+                'Zemstsesteenweg 203, 1980 Zemst'
+            ];
+            
+            $address = $addresses[array_rand($addresses)];
+
+
             $trainer = Trainer::create([
                 'user_id' => $user->id,
-                'home_club_address' => 1, // Assuming this data comes from somewhere
+                'home_club_address' =>   $address,
                 'expertise' => $data['expertise'],
                 'education' => $data['education'],
                 'languages' => $data['languages'],

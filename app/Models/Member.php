@@ -19,6 +19,13 @@ class Member extends Model
         'updated_at',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'workout_types' => 'array',
+        ];
+    }
+
     // User relationship
     public function user()
     {

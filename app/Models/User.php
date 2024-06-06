@@ -106,10 +106,19 @@ class User extends Authenticatable implements JWTSubject
 
             // Check if user has role member
             if ($user->role === 'member') {
+
+                $addresses = [
+                    'Bruul 107, 2800 Mechelen',
+                    'Zwartzustersvest 21/22, 2800 Mechelen',
+                    'Zemstsesteenweg 203, 1980 Zemst'
+                ];
+
+                $address = $addresses[array_rand($addresses)];
+
                 // Create member
                 Member::create([
                     'user_id' => $user->id,
-                    'home_club_address' => '1',
+                    'home_club_address' =>   $address,
                     'level_fitness' => 'beginner'
                 ]);
             }
