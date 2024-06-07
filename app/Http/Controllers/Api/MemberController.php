@@ -153,18 +153,54 @@ class MemberController extends Controller
     }
 
     // Get all members
-    public function getAllMembers()
+    public function getAllMembers(Request $request)
     {
         try {
-            // Get all members
-            $members = Member::with('user')->get();
+            // Get the filter values from the request
+            $home_club_address = $request->input('home_club_address');
+            $level_fitness = $request->input('level_fitness');
+            $workout_types = $request->input('workout_types');
+
+            // Create the query
+            $query = Member::with('user');
+
+            // Add the filter conditions if they are provided
+            if ($home_club_address) {
+                $home_club_address = trim($home_club_address);
+                $query->where('home_club_address', $home_club_address);
+            }
+
+            if ($level_fitness) {
+                $level_fitness = trim($level_fitness);
+                $query->where('level_fitness', $level_fitness);
+            }
+
+            // Execute the query to get all members initially
+            $members = $query->get();
+
+            // Filter by workout types if provided
+            if ($workout_types) {
+                $workoutTypesArray = explode(',', $workout_types);
+                $workoutTypesArray = array_map('trim', $workoutTypesArray); // Trim whitespace from each value
+
+                $members = $members->filter(function ($member) use ($workoutTypesArray) {
+                    $memberWorkoutTypes = explode(',', $member->workout_types);
+                    $memberWorkoutTypes = array_map('trim', $memberWorkoutTypes);
+                    foreach ($workoutTypesArray as $workoutType) {
+                        if (in_array($workoutType, $memberWorkoutTypes)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            }
 
             // Check if members exist
             if ($members->isNotEmpty()) {
                 // Return success response
                 return response()->json([
                     "status" => true,
-                    "members" => $members
+                    "members" => $members->values() // Re-index the collection
                 ]);
             }
 

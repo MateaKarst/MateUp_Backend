@@ -96,12 +96,20 @@ class UserController extends Controller
                 $user->user_token = hash('sha256', $token);
                 $user->save();
 
+
+                // check if user is member or trainer
+                if ($user->role === 'member') {
+                    $user->load('member'); // Assuming 'member' is the relationship name
+                } elseif ($user->role === 'trainer') {
+                    $user->load('trainer'); // Assuming 'trainer' is the relationship name
+                }
+
                 // Return success response with token
                 return response()->json([
                     "status" => true,
                     "message" => "User logged in successfully",
-                    "userToken" => $user -> user_token,
-                    "user" => $user
+                    "userToken" => $user->user_token,
+                    "userData" => $user,
                 ]);
             } else {
                 return response()->json([
