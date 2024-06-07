@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Buddies;
+use App\Models\Member;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 
 class BuddiesController extends Controller
@@ -193,27 +195,28 @@ class BuddiesController extends Controller
         }
     }
 
-    public function getBuddies(Request $request, $userId = null)
+    public function getBuddies(Request $request, $memberId = null)
     {
         try {
-            // Get the user based on the provided userId or the authenticated user
-            if ($userId) {
-                $user = User::find($userId);
-                if (!$user || ($user->role !== 'admin' && $user->id != $userId)) {
-                    return response()->json(['message' => 'Unauthorized'], 401);
+            // Check if memberId is provided
+            if ($memberId) {
+                // Retrieve the member based on the provided memberId
+                $member = Member::find($memberId);
+
+                // Check if the member exists
+                if (!$member) {
+                    return response()->json(['message' => 'Member not found'], 404);
                 }
             } else {
-                // Retrieve the user based on the authentication token
-                $user = User::where('user_token', $request->bearerToken())->first();
-                if (!$user) {
+                // If memberId is not provided, retrieve the member based on the authenticated user
+                $member = Member::where('user_id', auth()->user()->id)->first();
+                if (!$member) {
                     return response()->json(['message' => 'Unauthorized'], 401);
                 }
             }
 
-            // Check if user exists
-            if (!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
+            // Get the user associated with the member
+            $user = $member->user;
 
             // Get all buddies where the user is involved (either as the user or as the buddy) and the status is accepted
             $buddies = Buddies::where(function ($query) use ($user) {
@@ -242,7 +245,11 @@ class BuddiesController extends Controller
                 'buddies' => $uniqueBuddies
             ], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            // Log the error message
+            Log::error('Error getting buddies: ' . $e->getMessage());
+
+            // Return a JSON response with a generic error message
+            return response()->json(['message' => 'Internal Server Error'], 500);
         }
     }
 }

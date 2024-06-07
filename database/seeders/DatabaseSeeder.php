@@ -46,10 +46,20 @@ class DatabaseSeeder extends Seeder
             'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=600',
             'https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&w=600',
             'https://images.pexels.com/photos/678783/pexels-photo-678783.jpeg?auto=compress&cs=tinysrgb&w=600',
+            "https://images.pexels.com/photos/1484801/pexels-photo-1484801.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/889511/pexels-photo-889511.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/2340978/pexels-photo-2340978.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/1035673/pexels-photo-1035673.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/1040882/pexels-photo-1040882.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/4429279/pexels-photo-4429279.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/2884842/pexels-photo-2884842.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/2460227/pexels-photo-2460227.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/3778212/pexels-photo-3778212.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "https://images.pexels.com/photos/2080382/pexels-photo-2080382.jpeg?auto=compress&cs=tinysrgb&w=600",
         ];
         $usedProfileImagesMember = [];
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $name = $userMemberFaker->firstName;
             $surname = $userMemberFaker->lastName;
             $username = $name . ' ' . $surname;
@@ -101,20 +111,23 @@ class DatabaseSeeder extends Seeder
                 'Cardio Workouts',
                 'Strength Training',
                 'Core Workouts',
+                'Yoga',
+                'CrossFit',
+                'HIIT',
             ];
-            
+
             // Retrieve all members
             $members = Member::all();
             foreach ($members as $member) {
                 // Select two random workout types
                 $randomWorkouts = array_rand(array_flip($workouts), 2);
-            
+
                 // Update the member with the selected workout types
                 $member->workout_types = implode(', ', $randomWorkouts);
                 $member->save();
             }
         }
-            
+
 
         // TRAINER USERS
         $trainerData = [
@@ -248,7 +261,7 @@ class DatabaseSeeder extends Seeder
                 'Zwartzustersvest 21/22, 2800 Mechelen',
                 'Zemstsesteenweg 203, 1980 Zemst'
             ];
-            
+
             $address = $addresses[array_rand($addresses)];
 
 

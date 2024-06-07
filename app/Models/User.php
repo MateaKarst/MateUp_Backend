@@ -110,7 +110,9 @@ class User extends Authenticatable implements JWTSubject
                 $addresses = [
                     'Bruul 107, 2800 Mechelen',
                     'Zwartzustersvest 21/22, 2800 Mechelen',
-                    'Zemstsesteenweg 203, 1980 Zemst'
+                    'Zemstsesteenweg 203, 1980 Zemst',
+                    'Zwartebeekstraat 14, 2800 Mechelen',
+                    'Sint-Jacobsstraat 1, 2800 Mechelen',
                 ];
 
                 $address = $addresses[array_rand($addresses)];
