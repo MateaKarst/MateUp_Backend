@@ -82,14 +82,14 @@ class TrainerController extends Controller
             if ($trainer) {
                 // Manually load user relationship
                 $trainer->load('user');
-    
+
                 // Return success response with user information included
                 return response()->json([
                     'status' => true,
                     'trainer' => $trainer,
                 ]);
             }
-    
+
             // Return error response
             return response()->json([
                 'status' => false,
@@ -103,7 +103,7 @@ class TrainerController extends Controller
             ]);
         }
     }
-    
+
 
     // Update trainer
     public function updateTrainer(Request $request, $userId = null)
@@ -119,7 +119,7 @@ class TrainerController extends Controller
                 'rate_currency' => 'required',
                 'rate_amount' => 'required',
             ]);
-    
+
             // Get trainer
             if ($userId) {
                 // Get trainer by user ID
@@ -128,7 +128,7 @@ class TrainerController extends Controller
                 // Get trainer from authenticated user
                 $trainer = Trainer::where('user_id', auth()->user()->id)->first();
             }
-    
+
             // Check if trainer exists
             if ($trainer) {
                 // Update trainer
@@ -142,10 +142,10 @@ class TrainerController extends Controller
                     'content_about' => $request->content_about,
                     'updated_at' => now(),
                 ]);
-    
+
                 // Manually load user relationship
                 $trainer->load('user');
-    
+
                 // Return success response with user information included
                 return response()->json([
                     'status' => true,
@@ -153,7 +153,7 @@ class TrainerController extends Controller
                     'trainer' => $trainer,
                 ]);
             }
-    
+
             // Return error response
             return response()->json([
                 'status' => false,
@@ -169,11 +169,29 @@ class TrainerController extends Controller
     }
 
     // Get all trainers
-    public function getAllTrainers()
+    public function getAllTrainers(Request $request)
     {
         try {
-            // Get trainers with user information eager loaded
-            $trainers = Trainer::with('user')->get();
+            // Get the filter values form request
+            $home_club_address = $request->input('home_club_address');
+            $expertise = $request->input('expertise');
+
+            // Create the query
+            $query = Trainer::with('user');
+
+            // Add the filter conditions if they are provided
+            if ($home_club_address) {
+                $home_club_address = trim($home_club_address);
+                $query->where('home_club_address', $home_club_address);
+            }
+
+            if ($expertise) {
+                $expertise = trim($expertise);
+                $query->where('expertise', $expertise);
+            }
+
+            // Execute the query to get all members initially
+            $trainers = $query->get();
 
             // Check if trainers exist
             if ($trainers->isNotEmpty()) {

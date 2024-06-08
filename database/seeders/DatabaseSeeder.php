@@ -138,25 +138,25 @@ class DatabaseSeeder extends Seeder
                 'content_about' => 'Building muscle and proper form.',
             ],
             [
-                'expertise' => 'Cardiovascular conditioning',
-                'education' => 'Certified Personal Trainer',
+                'expertise' => 'HIIT',
+                'education' => 'Certified HIIT Trainer',
                 'languages' => 'English',
                 'content_about' => 'HIIT workouts and endurance training.',
             ],
             [
-                'expertise' => 'Yoga and flexibility',
+                'expertise' => 'Yoga',
                 'education' => 'Yoga Alliance Certified Instructor',
                 'languages' => 'English, French',
                 'content_about' => 'Stress relief and mindfulness through yoga.',
             ],
             [
-                'expertise' => 'Nutrition coaching',
-                'education' => 'Registered Dietitian',
+                'expertise' => 'HIIT',
+                'education' => 'Certified HIIT Trainer',
                 'languages' => 'English',
                 'content_about' => 'Creating balanced meal plans for weight loss and muscle gain.',
             ],
             [
-                'expertise' => 'Functional training',
+                'expertise' => 'CrossFit',
                 'education' => 'CrossFit Level 1 Trainer',
                 'languages' => 'English',
                 'content_about' => 'Functional movements for everyday life.',
@@ -168,25 +168,25 @@ class DatabaseSeeder extends Seeder
                 'content_about' => 'Self-defense techniques and discipline.',
             ],
             [
-                'expertise' => 'Pilates and core strength',
-                'education' => 'Certified Pilates Instructor',
+                'expertise' => 'Core Workouts',
+                'education' => 'Certified Core Instructor',
                 'languages' => 'English, German',
                 'content_about' => 'Strengthening the core and improving posture.',
             ],
             [
-                'expertise' => 'Sports performance coaching',
-                'education' => "Master's in Sports Science",
+                'expertise' => 'CrossFit',
+                'education' => "Master's in CrossFit",
                 'languages' => 'English',
                 'content_about' => 'Enhancing athletic performance through specialized training.',
             ],
             [
-                'expertise' => 'Indoor cycling',
-                'education' => 'Spinning Instructor Certification',
+                'expertise' => 'Cycling',
+                'education' => 'Cycling Alliance Certified Instructor',
                 'languages' => 'English',
                 'content_about' => 'High-energy spin classes and improving cardiovascular health.',
             ],
             [
-                'expertise' => 'CrossFit and functional fitness',
+                'expertise' => 'CrossFit',
                 'education' => 'CrossFit Level 2 Trainer',
                 'languages' => 'English',
                 'content_about' => 'Varied workouts for overall fitness and athleticism.',
@@ -258,8 +258,8 @@ class DatabaseSeeder extends Seeder
 
             $addresses = [
                 'Bruul 107, 2800 Mechelen',
-                'Zwartzustersvest 21/22, 2800 Mechelen',
-                'Zemstsesteenweg 203, 1980 Zemst'
+                'Zwartebeekstraat 14, 2800 Mechelen',
+                'Sint-Jacobsstraat 1, 2800 Mechelen',
             ];
 
             $address = $addresses[array_rand($addresses)];
