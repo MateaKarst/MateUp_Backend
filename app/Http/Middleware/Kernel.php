@@ -21,7 +21,7 @@ class Kernel extends HttpKernel
         'member' => \App\Http\Middleware\MemberMiddleware::class,
         'trainer' => \App\Http\Middleware\TrainerMiddleware::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        'password-protected' => \App\Http\Middleware\PasswordProtected::class,
+        'checkToken' => \App\Http\Middleware\CheckToken::class,
     ];
 
     protected $middlewareGroups = [

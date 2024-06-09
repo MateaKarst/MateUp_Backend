@@ -13,6 +13,47 @@ use GuzzleHttp\Middleware;
 
 // API Routes
 
+
+
+// Open Routes
+Route::group([
+    'middleware' => 'api-session',
+], function () {
+    Route::prefix('user')->group(function () {
+        Route::post('/login', [UserController::class, 'login']);
+    });
+});
+
+// Protected Routes
+
+// Application Routes
+Route::group([
+    'middleware' => 'auth:sanctum',
+    'middleware' => 'api-session',
+    'middleware' => 'checkToken',
+], function () {
+    
+});
+
+Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
+Route::get('/user/{id}', [UserController::class, 'getUser'])->name('user.get'); // Get a user
+
+Route::get('/members', [MemberController::class, 'getAllMembers'])->name('members.get'); // Get all members
+Route::get('/member/{id}', [MemberController::class, 'getMember'])->name('member.get'); // Get a member
+
+Route::get('/trainers', [TrainerController::class, 'getAllTrainers'])->name('trainers.get'); // Get all trainers
+Route::get('/trainer/{id}', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get a trainer
+
+Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.get'); // Get all admins
+Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin
+
+Route::get('/buddy/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get all buddies
+Route::get('/buddy/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get a user's buddies
+
+Route::get('/group-sessions/{trainerId}', [GroupSessionsController::class, 'getAllGroupSessions'])->name('group-sessions.get'); // Get all group sessions
+Route::get('/group-session/{sessionId}', [GroupSessionsController::class, 'getGroupSession'])->name('group-sessions.get'); // Get a user's group sessions
+
+
 // // -------------- USER ROUTES : MEMBER, TRAINER, ADMIN -------------- 
 // // ------- PUBLIC ROUTES ------- 
 // Route::get('/user', function (Request $request) {
@@ -71,65 +112,28 @@ use GuzzleHttp\Middleware;
 //         Route::get('/{id}', [TrainerController::class, 'getTrainer'])->name('admin.trainer.get'); // Get trainer
 //     });
 // });
+// Route::group([
+//     'middleware' => 'auth:sanctum',
+//     'middleware' => 'api-session',
+// ], function () {
 
+//     // User Routes
+//     Route::prefix('user')->group(function () {
+//         // Global Access
+//         Route::post('/logout', [UserController::class, 'logout']);
 
-// Open Routes
-Route::group([
-    'middleware' => 'api-session',
-], function () {
-    Route::prefix('user')->group(function () {
-        Route::post('/login', [UserController::class, 'login']);
-    });
-});
+//         // Admin Access
+//         Route::middleware(['admin'])->group(function () {
+//             Route::post('/register', [UserController::class, 'register']);
+//         });
+//     });
 
-// Protected Routes
-Route::group([
-    'middleware' => 'auth:sanctum',
-    'middleware' => 'api-session',
-], function () {
-
-    // User Routes
-    Route::prefix('user')->group(function () {
-        // Global Access
-        Route::post('/logout', [UserController::class, 'logout']);
-
-        // Admin Access
-        Route::middleware(['admin'])->group(function () {
-            Route::post('/register', [UserController::class, 'register']);
-        });
-    });
-
-    // Buddy Routes
-    Route::prefix('buddy')->group(function () {
-        Route::post('/add/{buddyId}', [BuddiesController::class, 'addBuddy'])->name('buddy.add');
-        Route::post('/accept/{buddyId}', [BuddiesController::class, 'acceptBuddy'])->name('buddy.accept');
-        Route::post('/reject/{buddyId}', [BuddiesController::class, 'rejectBuddy'])->name('buddy.reject');
-        Route::post('/remove/{buddyId}', [BuddiesController::class, 'removeBuddy'])->name('buddy.remove');
-        Route::get('/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get');
-    });
-});
-
-// Application Routes
-Route::group([
-    'middleware' => 'auth:sanctum',
-    'middleware' => 'api-session',
-    'middleware' => 'password-protected',
-], function () {
-});
-Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
-Route::get('/user/{id}', [UserController::class, 'getUser'])->name('user.get'); // Get a user
-
-Route::get('/members', [MemberController::class, 'getAllMembers'])->name('members.get'); // Get all members
-Route::get('/member/{id}', [MemberController::class, 'getMember'])->name('member.get'); // Get a member
-
-Route::get('/trainers', [TrainerController::class, 'getAllTrainers'])->name('trainers.get'); // Get all trainers
-Route::get('/trainer/{id}', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get a trainer
-
-Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.get'); // Get all admins
-Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin
-
-Route::get('/buddy/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get all buddies
-Route::get('/buddy/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get a user's buddies
-
-Route::get('/group-sessions/{trainerId}', [GroupSessionsController::class, 'getAllGroupSessions'])->name('group-sessions.get'); // Get all group sessions
-Route::get('/group-session/{sessionId}', [GroupSessionsController::class, 'getGroupSession'])->name('group-sessions.get'); // Get a user's group sessions
+//     // Buddy Routes
+//     Route::prefix('buddy')->group(function () {
+//         Route::post('/add/{buddyId}', [BuddiesController::class, 'addBuddy'])->name('buddy.add');
+//         Route::post('/accept/{buddyId}', [BuddiesController::class, 'acceptBuddy'])->name('buddy.accept');
+//         Route::post('/reject/{buddyId}', [BuddiesController::class, 'rejectBuddy'])->name('buddy.reject');
+//         Route::post('/remove/{buddyId}', [BuddiesController::class, 'removeBuddy'])->name('buddy.remove');
+//         Route::get('/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get');
+//     });
+// });

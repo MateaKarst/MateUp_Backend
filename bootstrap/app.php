@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'customAuth' => \App\Http\Middleware\AuthMiddleware::class,
             'api-session' => \Illuminate\Session\Middleware\StartSession::class,
-            'password-protected' => \App\Http\Middleware\PasswordProtected::class,
+            'checkToken' => \App\Http\Middleware\CheckToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
