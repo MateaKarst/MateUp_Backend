@@ -282,25 +282,35 @@ class DatabaseSeeder extends Seeder
         // BUDDIES
         $buddiesFaker = Faker::create();
 
-        // Get all users
-        $users = User::all();
+        // Get all members
+        $members = Member::all();
 
-        // Generate buddies
-        foreach ($users as $user) {
-            // Determine the number of buddies for each user
+        // Generate buddies for each member
+        foreach ($members as $member) {
+            // Determine the number of buddies for each member
             $buddiesCount = $buddiesFaker->numberBetween(1, 5);
 
-            // Get random buddies
-            $buddies = $users->random($buddiesCount)->pluck('id')->toArray();
+            // Get random members to be buddies with
+            $buddyCandidates = Member::where('id', '!=', $member->id)->pluck('id')->toArray();
 
+            // Shuffle the array of buddies to ensure randomness
+            shuffle($buddyCandidates);
+
+            // Select a subset of buddies from the shuffled array
+            $buddies = array_slice($buddyCandidates, 0, $buddiesCount);
+
+            // Insert buddies into the database
             foreach ($buddies as $buddyId) {
-                // Ensure the buddy relationship is unique and not with themselves
-                if ($user->id !== $buddyId && !DB::table('buddies')->where([
-                    ['user_id', $user->id],
+                // Retrieve the user ID of the member
+                $userId = $member->user_id;
+
+                // Ensure the buddy relationship is unique
+                if (!DB::table('buddies')->where([
+                    ['user_id', $userId],
                     ['buddy_id', $buddyId],
                 ])->exists()) {
                     DB::table('buddies')->insert([
-                        'user_id' => $user->id,
+                        'user_id' => $userId,
                         'buddy_id' => $buddyId,
                         'status' => 'accepted',
                         'created_at' => now(),

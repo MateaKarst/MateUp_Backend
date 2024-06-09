@@ -156,45 +156,6 @@ class BuddiesController extends Controller
     }
 
     // Remove Buddy
-    public function removeBuddy(Request $request, $buddyId)
-    {
-        try {
-            // Get authenticated user
-            $user = auth()->user();
-
-            // Check if user exists
-            if (!$user) {
-                return response()->json([
-                    "status" => false,
-                    "message" => "User not found"
-                ], 404);
-            }
-
-            // Get the user id
-            $userId = $user->id;
-
-            // Find the buddy relationship
-            $buddy = Buddies::where(function ($query) use ($userId, $buddyId) {
-                $query->where('user_id', $userId)
-                    ->where('buddy_id', $buddyId);
-            })->orWhere(function ($query) use ($userId, $buddyId) {
-                $query->where('user_id', $buddyId)
-                    ->where('buddy_id', $userId);
-            })->where('status', 'accepted')->first();
-
-            if (!$buddy) {
-                return response()->json(['message' => 'Buddy relationship not found.'], 404);
-            }
-
-            // Delete the buddy relationship
-            $buddy->delete();
-
-            return response()->json(['message' => 'Buddy relationship removed successfully.'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
-        }
-    }
-
     public function getBuddies(Request $request, $memberId = null)
     {
         try {
@@ -224,7 +185,7 @@ class BuddiesController extends Controller
                     ->orWhere('buddy_id', $user->id);
             })
                 ->where('status', 'accepted')
-                ->with(['user', 'buddy'])
+                ->with(['buddy'])
                 ->get();
 
             // Create a collection of unique buddies
@@ -232,10 +193,19 @@ class BuddiesController extends Controller
 
             foreach ($buddies as $buddy) {
                 if ($buddy->user_id === $user->id) {
-                    $uniqueBuddies->push($buddy->buddy);
+                    $buddyDetails = $buddy->buddy;
+                    $memberDetails = [
+                        'id' => $member->id,
+                        'home_club_address' => $member->home_club_address
+                    ];
                 } else {
-                    $uniqueBuddies->push($buddy->user);
+                    $buddyDetails = $buddy->user;
+                    $memberDetails = Member::where('user_id', $buddy->user_id)->first();
                 }
+
+                $buddyDetails['member'] = $memberDetails;
+
+                $uniqueBuddies->push($buddyDetails);
             }
 
             // Remove duplicate buddies
