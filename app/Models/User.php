@@ -137,5 +137,17 @@ class User extends Authenticatable implements JWTSubject
             $user->buddies()->delete();
             $user->buddyBuddies()->delete();
         });
+
+        static::deleting(function ($user) {
+            // Delete all user type relationships where the user is the user_id
+            $user->member()->delete();
+            $user->trainer()->delete();
+            $user->admin()->delete();
+        });
+
+        static::deleting(function ($user) {
+            // Delete all sessions where the user is the user_id
+            $user->sessions()->delete();
+        });
     }
 }
