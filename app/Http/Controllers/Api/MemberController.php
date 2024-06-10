@@ -308,43 +308,46 @@ class MemberController extends Controller
         }
     }
 
-    public function searchingForMembers(Request $request, $memberId)
+    public function getMembersYouMightKnow(Request $request, $userId)
     {
         try {
-            // Get user ID and member ID from the request
-            $member = Member::find($memberId);
-            if (!$member) {
-                return response()->json(['status' => false, 'message' => 'Member not found'], 404);
+            // Instantiate BuddiesController
+            $buddiesController = new BuddiesController();
+    
+            // Get the user's buddies
+            $buddiesResponse = $buddiesController->getBuddies(new Request(), $userId);
+            if (!$buddiesResponse->original['buddies']) {
+                throw new \Exception('No buddies found for the user');
+            }
+            $buddies = $buddiesResponse->original['buddies'];
+    
+            // Collect all the buddies' IDs
+            $buddyIds = collect($buddies)->pluck('id')->toArray();
+    
+            // Get the buddies of the buddies
+            $buddiesOfBuddies = collect();
+            foreach ($buddyIds as $buddyId) {
+                $buddiesResponse = $buddiesController->getBuddies(new Request(), $buddyId);
+                if ($buddiesResponse->original['buddies']) {
+                    $buddiesOfBuddies = $buddiesOfBuddies->merge($buddiesResponse->original['buddies']);
+                }
             }
     
-            $userId = $member->user_id;
+            // Remove duplicates, current user's member, and buddies
+            $uniqueBuddiesOfBuddies = $buddiesOfBuddies->unique('id')->reject(function ($buddy) use ($userId, $buddyIds) {
+                return $buddy['id'] == $userId || in_array($buddy['id'], $buddyIds);
+            })->values();
     
-            // Get all members
-            $members = Member::with('user')->get();
-    
-            // Get all buddies of the authenticated user
-            $buddies = Buddies::where(function ($query) use ($userId) {
-                $query->where('user_id', $userId)
-                    ->orWhere('buddy_id', $userId);
-            })
-                ->where('status', 'accepted')
-                ->get();
-    
-            // Create a set of buddy IDs for quick lookup
-            $buddyIds = $buddies->map(function ($buddy) use ($userId) {
-                return $buddy->user_id === $userId ? $buddy->buddy_id : $buddy->user_id;
-            })->toArray();
-    
-            // Add is_buddy property to each member
-            $members = $members->map(function ($member) use ($buddyIds) {
-                $member->is_buddy = in_array($member->user_id, $buddyIds);
-                return $member;
-            });
-    
-            return response()->json(['status' => true, 'members' => $members], 200);
+            return response()->json([
+                'status' => true,
+                'people_you_might_know' => $uniqueBuddiesOfBuddies,
+            ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()], 500);
+            // Return a JSON response with an error message
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
-    
 }

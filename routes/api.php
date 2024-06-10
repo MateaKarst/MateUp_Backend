@@ -56,6 +56,7 @@ Route::group([
     
     Route::get('/member/searching-members/{memberId}', [MemberController::class, 'searchingForMembers'])->name('club-members.get'); // Get all matching workout members
     
+    Route::get('/member/members-you-might-know/{memberId}', [MemberController::class, 'getMembersYouMightKnow'])->name('club-members.get'); // Get all matching workout members
 
 
 // // -------------- USER ROUTES : MEMBER, TRAINER, ADMIN -------------- 
