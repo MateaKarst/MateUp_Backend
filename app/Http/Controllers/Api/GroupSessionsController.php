@@ -27,19 +27,18 @@ class GroupSessionsController extends Controller
 
             // Validate request
             $request->validate([
-                'location' => 'required',
-                'max_participants' => 'required',
-                'session_date' => 'required',
-                'start_time' => 'required',
-                'end_time' => 'required',
+            
             ]);
 
             // Create session
             GroupSessions::create([
                 'user_id' => $user,
                 'trainer_id' => $trainer,
-                'location' => $request->location,
+                'session_image_url' => $request->session_image_url,
+                'goal' => $request->goal,
+                'club_address' => $request->club_address,
                 'max_participants' => $request->max_participants,
+                'available_spots' => $request->available_spots,
                 'session_date' => $request->session_date,                
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
@@ -99,75 +98,6 @@ class GroupSessionsController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Session not found',
-            ]);
-        } catch (\Exception $e) {
-            // Catch any exceptions and return error response
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
-    // Update session
-    public function updateGroupSession(Request $request, $sessionId)
-    {
-        try {
-            // Validate request
-            $request->validate([
-                'location' => 'required',
-                'max_participants' => 'required',
-                'start_time' => 'required',
-                'end_time' => 'required',
-            ]);
-
-            // Update session
-            GroupSessions::where('id', $sessionId)->update([
-                'location' => $request->location,
-                'max_participants' => $request->max_participants,
-                'session_date' => $request->session_date,
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time,
-                'updated_at' => now(),
-            ]);
-
-            // Get session
-            $session = GroupSessions::where('id', $sessionId)->first();
-
-            // Check if session exists
-            if ($session) {
-                // Return success response
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Session updated successfully',
-                ]);
-            }
-
-            // Return error response
-            return response()->json([
-                'status' => false,
-                'message' => 'Session not updated',
-            ]);
-        } catch (\Exception $e) {
-            // Catch any exceptions and return error response
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
-    // Delete session
-    public function deleteGroupSession($sessionId)
-    {
-        try {
-            // Delete session
-            GroupSessions::where('id', $sessionId)->delete();
-
-            // Return success response
-            return response()->json([
-                'status' => true,
-                'message' => 'Session deleted successfully',
             ]);
         } catch (\Exception $e) {
             // Catch any exceptions and return error response

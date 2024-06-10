@@ -16,8 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger('trainer_id');
             $table->unsignedBigInteger('user_id');
 
-            $table->string('location');
+            $table->string('session_image_url');
+            $table->string('goal');
+
             $table->integer('max_participants');
+            $table->integer('available_spots');
+            $table->string('club_address');
+
             $table->date('session_date');
             $table->time('start_time');
             $table->time('end_time');

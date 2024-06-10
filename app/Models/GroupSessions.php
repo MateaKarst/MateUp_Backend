@@ -10,10 +10,13 @@ class GroupSessions extends Model
     use HasFactory;
 
     protected $fillable = [
-        'trainer_id',
         'user_id',
-        'location',
+        'trainer_id',
+        'session_image_url',
+        'goal',
         'max_participants',
+        'available_spots',
+        'club_address',
         'session_date',
         'start_time',
         'end_time',
