@@ -38,20 +38,24 @@ Route::group([
 
     Route::get('/members', [MemberController::class, 'getAllMembers'])->name('members.get'); // Get all members
     Route::get('/member/{id}', [MemberController::class, 'getMember'])->name('member.get'); // Get a member
-
+    Route::get('/member/club-members/{memberId}', [MemberController::class, 'getMemberClubMembers'])->name('club-members.get'); // Get all club members of a member
+    Route::get('/member/matching-workouts-members/{memberId}', [MemberController::class, 'getMatchingWorkoutsMembers'])->name('club-members.get'); // Get all matching workout members
+    
     Route::get('/trainers', [TrainerController::class, 'getAllTrainers'])->name('trainers.get'); // Get all trainers
     Route::get('/trainer/{id}', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get a trainer
-
+    
     Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.get'); // Get all admins
     Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin
-
+    
     Route::get('/buddy/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get all buddies
     Route::get('/buddy/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get a user's buddies
-
+    
     Route::get('/group-sessions/{trainerId}', [GroupSessionsController::class, 'getAllGroupSessions'])->name('group-sessions.get'); // Get all group sessions
     Route::get('/group-session/{sessionId}', [GroupSessionsController::class, 'getGroupSession'])->name('group-sessions.get'); // Get a user's group sessions
-});
-
+    });
+    
+    Route::get('/member/searching-members/{memberId}', [MemberController::class, 'searchingForMembers'])->name('club-members.get'); // Get all matching workout members
+    
 
 
 // // -------------- USER ROUTES : MEMBER, TRAINER, ADMIN -------------- 
