@@ -18,6 +18,7 @@ use Database\Seeders\userSeeders\memberSeeder;
 use Database\Seeders\userSeeders\trainerSeeder;
 use Database\Seeders\userSeeders\buddiesSeeder;
 use Database\Seeders\groupSessionsSeeders\groupSessionsSeeder;
+use Database\Seeders\challengesSeeders\challengesSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,7 +30,8 @@ class DatabaseSeeder extends Seeder
             memberSeeder::class,
             trainerSeeder::class,
             buddiesSeeder::class,
-            groupSessionsSeeder::class
+            groupSessionsSeeder::class,
+            challengesSeeder::class
         ]);
     }
 }
