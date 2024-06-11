@@ -21,7 +21,6 @@ class MemberController extends Controller
                 'home_club_address' => 'required',
                 'workout_types' => 'required',
                 'level_fitness' => 'required',
-                'workout_types' => 'required',
             ]);
 
             // Create member
@@ -217,6 +216,7 @@ class MemberController extends Controller
         }
     }
 
+    // Get member club members
     public function getMemberClubMembers(Request $request, $memberId)
     {
         try {
@@ -232,12 +232,14 @@ class MemberController extends Controller
             $currentUser = $currentUserResponse->original['member'];
             $homeClubAddress = $currentUser['home_club_address'];
 
-            // Fetch all members
+            // Fetch all members excluding the current member
             $membersResponse = $this->getAllMembers(new Request());
             if (!$membersResponse->original['status']) {
                 throw new \Exception($membersResponse->original['message']);
             }
-            $allMembers = $membersResponse->original['members'];
+            $allMembers = $membersResponse->original['members']->reject(function ($member) use ($memberId) {
+                return $member['id'] == $memberId;
+            });
 
             // Fetch buddy IDs
             $buddiesController = new BuddiesController();
@@ -249,11 +251,13 @@ class MemberController extends Controller
                 return $member['home_club_address'] === $homeClubAddress && !in_array($member['id'], $buddyIds);
             });
 
+            // Return success response
             return response()->json([
                 'status' => true,
                 'members' => $filteredMembers->values() // Re-index the collection
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()
@@ -261,6 +265,7 @@ class MemberController extends Controller
         }
     }
 
+    // Get matching workout types
     public function getMatchingWorkoutsMembers(Request $request, $memberId)
     {
         try {
@@ -276,12 +281,14 @@ class MemberController extends Controller
             $currentUser = $currentUserResponse->original['member'];
             $currentUserWorkoutTypes = array_map('trim', explode(',', $currentUser['workout_types']));
 
-            // Fetch all members
+            // Fetch all members excluding the current member
             $membersResponse = $this->getAllMembers(new Request());
             if (!$membersResponse->original['status']) {
                 throw new \Exception($membersResponse->original['message']);
             }
-            $allMembers = $membersResponse->original['members'];
+            $allMembers = $membersResponse->original['members']->reject(function ($member) use ($memberId) {
+                return $member['id'] == $memberId;
+            });
 
             // Fetch buddy IDs
             $buddiesController = new BuddiesController();
@@ -296,11 +303,13 @@ class MemberController extends Controller
                 return $matches && !in_array($member['id'], $buddyIds);
             });
 
+            // Return success response
             return response()->json([
                 'status' => true,
                 'members' => $filteredMembers->values() // Re-index the collection
             ]);
         } catch (\Exception $e) {
+            // Catch any exceptions and return error response// Return error response
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()
@@ -308,22 +317,23 @@ class MemberController extends Controller
         }
     }
 
+    // Get members you might know
     public function getMembersYouMightKnow(Request $request, $userId)
     {
         try {
             // Instantiate BuddiesController
             $buddiesController = new BuddiesController();
-    
+
             // Get the user's buddies
             $buddiesResponse = $buddiesController->getBuddies(new Request(), $userId);
             if (!$buddiesResponse->original['buddies']) {
                 throw new \Exception('No buddies found for the user');
             }
             $buddies = $buddiesResponse->original['buddies'];
-    
+
             // Collect all the buddies' IDs
             $buddyIds = collect($buddies)->pluck('id')->toArray();
-    
+
             // Get the buddies of the buddies
             $buddiesOfBuddies = collect();
             foreach ($buddyIds as $buddyId) {
@@ -332,22 +342,69 @@ class MemberController extends Controller
                     $buddiesOfBuddies = $buddiesOfBuddies->merge($buddiesResponse->original['buddies']);
                 }
             }
-    
+
             // Remove duplicates, current user's member, and buddies
             $uniqueBuddiesOfBuddies = $buddiesOfBuddies->unique('id')->reject(function ($buddy) use ($userId, $buddyIds) {
                 return $buddy['id'] == $userId || in_array($buddy['id'], $buddyIds);
             })->values();
-    
+
+            // Return success response   
             return response()->json([
                 'status' => true,
                 'people_you_might_know' => $uniqueBuddiesOfBuddies,
             ]);
         } catch (\Exception $e) {
-            // Return a JSON response with an error message
+            // Return error response
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    // Get other members
+    public function getConnectOtherMembers(Request $request, $memberID)
+    {
+        try {
+            // Get the user ID from the request or session
+            $memberId = $memberID;
+            $userId = Member::where('id', $memberId)->first()->user_id;
+
+            // Instantiate BuddiesController to fetch buddy IDs
+            $buddiesController = new BuddiesController();
+
+            // Get buddy IDs for the current user
+            $buddiesResponse = $buddiesController->getBuddies(new Request(), $userId);
+            $buddyIds = $buddiesResponse->original['buddies']->pluck('id')->toArray();
+
+            // Get all members except the current member
+            $members = Member::with('user')->whereNotIn('id', [$memberId])->get();
+
+            // Filter out buddy members
+            $filteredMembers = $members->reject(function ($member) use ($buddyIds) {
+                return in_array($member->id, $buddyIds);
+            });
+
+            // Check if filtered members exist
+            if ($filteredMembers->isNotEmpty()) {
+                // Return success response
+                return response()->json([
+                    'status' => true,
+                    'members' => $filteredMembers->values() // Re-index the collection
+                ]);
+            }
+
+            // Return error response if no members found
+            return response()->json([
+                'status' => false,
+                'message' => 'No new members found'
+            ]);
+        } catch (\Exception $e) {
+            // Catch any exceptions and return error response
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
         }
     }
 }
