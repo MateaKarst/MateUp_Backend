@@ -25,6 +25,12 @@ class Trainer extends Model
         'updated_at',
     ];
 
+    // Attributes that should be hidden for serialization.
+    protected $hidden = [
+        'stripe_id',
+        'stripe_url',
+    ];
+
     // User relationship
     public function user()
     {

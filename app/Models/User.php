@@ -39,6 +39,8 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        'email',
+        'phone',
     ];
 
     // Attributes that should be cast.
@@ -85,6 +87,7 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    // User relationship with buddies
     public function buddies()
     {
         return $this->hasMany(Buddies::class, 'user_id');
