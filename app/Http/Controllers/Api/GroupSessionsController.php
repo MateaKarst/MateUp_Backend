@@ -26,8 +26,15 @@ class GroupSessionsController extends Controller
             $user = $trainer->user_id;
 
             // Validate request
-            $request->validate([
-            
+            $request->validate([        
+                'session_image_url' => 'required',
+                'goal' => 'required',
+                'club_address' => 'required',
+                'max_participants' => 'required',
+                'available_spots' => 'required',
+                'session_date' => 'required',
+                'start_time' => 'required',
+                'end_time' => 'required',
             ]);
 
             // Create session
