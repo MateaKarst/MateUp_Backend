@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\BuddiesController;
 use App\Http\Controllers\Api\GroupSessionsController;
+use App\Http\Controllers\Api\ChallengesController;
+use App\Models\Challenges;
 use GuzzleHttp\Middleware;
 
 // API Routes
@@ -33,30 +35,35 @@ Route::group([
     'middleware' => 'check-token',
 ], function () {
 
+    // User Routes
     Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
     Route::get('/user/{id}', [UserController::class, 'getUser'])->name('user.get'); // Get a user
 
+    // Member Routes
     Route::get('/members', [MemberController::class, 'getAllMembers'])->name('members.get'); // Get all members
     Route::get('/member/{id}', [MemberController::class, 'getMember'])->name('member.get'); // Get a member
     Route::get('/member/club-members/{memberId}', [MemberController::class, 'getMemberClubMembers'])->name('club-members.get'); // Get all club members of a member
     Route::get('/member/matching-workouts-members/{memberId}', [MemberController::class, 'getMatchingWorkoutsMembers'])->name('club-members.get'); // Get all matching workout members
-    
+    Route::get('/member/searching-members/{memberId}', [MemberController::class, 'searchingForMembers'])->name('club-members.get'); // Get all matching workout members
+    Route::get('/member/members-you-might-know/{memberId}', [MemberController::class, 'getMembersYouMightKnow'])->name('club-members.get'); // Get all matching workout members
+    Route::get('/member/connect-other-members/{memberId}', [MemberController::class, 'getConnectOtherMembers'])->name('club-members.get'); // Get all matching workout members
+
+    // Trainer Routes
     Route::get('/trainers', [TrainerController::class, 'getAllTrainers'])->name('trainers.get'); // Get all trainers
     Route::get('/trainer/{id}', [TrainerController::class, 'getTrainer'])->name('trainer.get'); // Get a trainer
-    
-    Route::get('/admins', [AdminController::class, 'getAllAdmins'])->name('admins.get'); // Get all admins
-    Route::get('/admin/{id}', [AdminController::class, 'getAdmin'])->name('admin.get'); // Get an admin
-    
+
+    // Admin Routes
     Route::get('/buddy/list', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get all buddies
     Route::get('/buddy/list/{userId}', [BuddiesController::class, 'getBuddies'])->name('buddies.get'); // Get a user's buddies
-    
+
+    // Group Session Routes
     Route::get('/group-sessions/{trainerId}', [GroupSessionsController::class, 'getAllGroupSessions'])->name('group-sessions.get'); // Get all group sessions
     Route::get('/group-session/{sessionId}', [GroupSessionsController::class, 'getGroupSession'])->name('group-sessions.get'); // Get a user's group sessions
-    });
+
+    // Challenge Routes
+    Route::get('/challenges/club-challenges/{memberId}', [ChallengesController::class, 'getMemberClubChallenges'])->name('challenges.get'); // Get all challenges
+});
     
-    Route::get('/member/searching-members/{memberId}', [MemberController::class, 'searchingForMembers'])->name('club-members.get'); // Get all matching workout members
-    
-    Route::get('/member/members-you-might-know/{memberId}', [MemberController::class, 'getMembersYouMightKnow'])->name('club-members.get'); // Get all matching workout members
 
 
 // // -------------- USER ROUTES : MEMBER, TRAINER, ADMIN -------------- 

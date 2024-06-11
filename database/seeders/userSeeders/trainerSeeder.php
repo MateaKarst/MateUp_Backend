@@ -3,13 +3,10 @@
 namespace Database\Seeders\userSeeders;
 
 use App\Models\User;
-use App\Models\Member;
 use App\Models\Trainer;
-use App\Models\Admin;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Exception;
 
@@ -110,6 +107,7 @@ class trainerSeeder extends Seeder
         $requiredUsage = array_fill(0, count($addresses), 2);
         $remainingUsers = count($trainerData);
     
+        // Generate trainers
         foreach ($trainerData as $data) {
             $name = $userTrainerFaker->firstName;
             $surname = $userTrainerFaker->lastName;

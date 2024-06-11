@@ -2,18 +2,10 @@
 
 namespace Database\Seeders\groupSessionsSeeders;
 
-use App\Models\User;
-use App\Models\Member;
 use App\Models\Trainer;
-use App\Models\Admin;
 use App\Models\GroupSessions;
-use App\Models\Sessions;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Exception;
 
 
 class groupSessionsSeeder extends Seeder

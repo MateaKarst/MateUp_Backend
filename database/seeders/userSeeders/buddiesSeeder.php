@@ -2,16 +2,10 @@
 
 namespace Database\Seeders\userSeeders;
 
-use App\Models\User;
 use App\Models\Member;
-use App\Models\Trainer;
-use App\Models\Admin;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Exception;
 
 class buddiesSeeder extends Seeder
 {
@@ -27,7 +21,7 @@ class buddiesSeeder extends Seeder
         // Generate buddies for each member
         foreach ($members as $member) {
             // Determine the number of buddies for each member
-            $buddiesCount = $buddiesFaker->numberBetween(1, 5);
+            $buddiesCount = $buddiesFaker->numberBetween(1, 3);
 
             // Get random members to be buddies with
             $buddyCandidates = Member::where('id', '!=', $member->id)->pluck('id')->toArray();

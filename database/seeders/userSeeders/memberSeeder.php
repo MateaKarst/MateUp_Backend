@@ -4,12 +4,9 @@ namespace Database\Seeders\userSeeders;
 
 use App\Models\User;
 use App\Models\Member;
-use App\Models\Trainer;
-use App\Models\Admin;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Faker\Factory as Faker;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Exception;
 
@@ -45,6 +42,7 @@ class memberSeeder extends Seeder
         ];
         $usedProfileImagesMember = [];
 
+        // Create 20 members
         for ($i = 0; $i < 20; $i++) {
             $name = $userMemberFaker->firstName;
             $surname = $userMemberFaker->lastName;
