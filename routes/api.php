@@ -33,7 +33,7 @@ Route::group([
     'middleware' => 'auth:sanctum',
     'middleware' => 'api-session',
     'middleware' => 'check-token',
-], function () {
+], function () {});
 
     // User Routes
     Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
@@ -62,7 +62,7 @@ Route::group([
 
     // Challenge Routes
     Route::get('/challenges/club-challenges/{memberId}', [ChallengesController::class, 'getMemberClubChallenges'])->name('challenges.get'); // Get all challenges
-});
+
     
 
 
