@@ -38,6 +38,7 @@ Route::group([
     // User Routes
     Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
     Route::get('/user/{id}', [UserController::class, 'getUser'])->name('user.get'); // Get a user
+    Route::get('/user/{id}', [UserController::class, 'deleteUser'])->name('user.delete'); // Get a user
 
     // Member Routes
     Route::get('/members', [MemberController::class, 'getAllMembers'])->name('members.get'); // Get all members

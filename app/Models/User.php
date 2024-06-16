@@ -39,8 +39,6 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
-        'email',
-        'phone',
     ];
 
     // Attributes that should be cast.
@@ -148,9 +146,19 @@ class User extends Authenticatable implements JWTSubject
             $user->admin()->delete();
         });
 
+        // Delete associated profiles based on role
         static::deleting(function ($user) {
-            // Delete all sessions where the user is the user_id
-            $user->sessions()->delete();
+            $user->buddies()->delete();
+            $user->buddyBuddies()->delete();
+            
+            // Delete associated profiles based on role
+            if ($user->role === 'member') {
+                $user->member()->delete();
+            } elseif ($user->role === 'trainer') {
+                $user->trainer()->delete();
+            } elseif ($user->role === 'admin') {
+                $user->admin()->delete();
+            }
         });
     }
 }
