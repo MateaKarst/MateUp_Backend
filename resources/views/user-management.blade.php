@@ -16,7 +16,6 @@
 </head>
 
 <body>
-    <livewire:navigation.main />
 
     <div class="container">
         <div class="row justify-content-center">
