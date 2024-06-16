@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,10 +24,17 @@ class AuthenticatedSessionController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            $request->session()->regenerate();
+        // gett the user
+        $user = User::where('email', $request->email)->first();
+        $userRole = $user->role;
 
-            return redirect()->intended('dashboard');
+        if (Auth::attempt($request->only('email', 'password'))) {
+            if ($userRole == 'admin') {
+                $request->session()->regenerate();
+                return redirect()->intended('dashboard');
+            } else {
+                return back()->withErrors(['email' => 'You are not authorized to access this page.']);
+            }
         }
 
         return back()->withErrors([
