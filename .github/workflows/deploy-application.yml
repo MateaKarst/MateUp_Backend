@@ -22,9 +22,9 @@ jobs:
           composer install --no-dev --no-interaction --prefer-dist
 
       - name: Install PHP and extensions
-        uses: shivammathur/setup-php@v2
+        uses: php-actions/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: '8.2'
           extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
 
       - name: Compile assets
