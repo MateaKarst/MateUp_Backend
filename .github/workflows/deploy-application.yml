@@ -39,7 +39,7 @@ jobs:
 
       - name: Verify artifact creation
         run: |
-          ls -lh ${GITHUB_SHA}.tar.gz
+          ls -lh "${GITHUB_SHA}.tar.gz"
 
       - name: Store artifacts for deployments
         uses: actions/upload-artifact@v3
