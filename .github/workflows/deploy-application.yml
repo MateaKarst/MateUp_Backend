@@ -31,11 +31,11 @@ jobs:
         run: npm install
 
       - name: Create deployment artifacts
-        run: tar -czf "${{ github.sha }}.tar.gz" --exclude=*.git --exclude=node_modules *
+        run: tar -czf "${{ github.workspace }}/${{ github.sha }}.tar.gz" --exclude=*.git --exclude=node_modules *
 
       - name: Verify artifact creation
         run: |
-          ls -lh "${{ github.sha }}.tar.gz" || echo "Artifact ${{ github.sha }}.tar.gz not found"
+          ls -lh "${{ github.workspace }}/${{ github.sha }}.tar.gz" || echo "Artifact ${{ github.sha }}.tar.gz not found"
 
       - name: Store artifacts for deployments
         if: success()
