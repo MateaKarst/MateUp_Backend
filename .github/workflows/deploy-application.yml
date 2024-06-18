@@ -25,25 +25,22 @@ jobs:
           extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
 
       - name: Composer install
-        run: |
-          composer install --no-dev --no-interaction --prefer-dist
+        run: composer install --no-dev --no-interaction --prefer-dist
 
       - name: Compile assets
         run: npm install
 
       - name: Create deployment artifacts
-        run: |
-          GITHUB_SHA=$(echo "${GITHUB_SHA}" | cut -c 1-8)  # Truncate GITHUB_SHA for simplicity
-          tar -czf "${GITHUB_SHA}.tar.gz" --exclude=*.git --exclude=node_modules *
+        run: tar -czf "${{ github.sha }}.tar.gz" --exclude=*.git --exclude=node_modules *
 
       - name: Verify artifact creation
         run: |
-          ls -lh "${GITHUB_SHA}.tar.gz" || echo "Artifact ${GITHUB_SHA}.tar.gz not found"
+          ls -lh "${{ github.sha }}.tar.gz" || echo "Artifact ${{ github.sha }}.tar.gz not found"
 
       - name: Store artifacts for deployments
-        if: success()  # Only store artifacts if the previous steps were successful
+        if: success()
         uses: actions/upload-artifact@v3
         with:
           name: app-build
-          path: "${{ github.workspace }}/${GITHUB_SHA}.tar.gz"
+          path: "${{ github.workspace }}/${{ github.sha }}.tar.gz"
           if-no-files-found: warn
