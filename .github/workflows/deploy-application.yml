@@ -11,15 +11,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Install Node.js and npm
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Install Composer
         run: |
-          composer self-update
           composer install --no-dev --no-interaction --prefer-dist
 
       - name: Install PHP and extensions
