@@ -30,3 +30,6 @@ jobs:
 
       - name: Compile assets
         run: npm install
+
+      - name: Create deployment artifacts
+        run: tar -czf application.tar.gz --exclude=*.git --exclude=node_modules *
