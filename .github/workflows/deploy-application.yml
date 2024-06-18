@@ -1,4 +1,5 @@
 name: Deploy Application
+
 on:
   push:
     branches: [main]
@@ -8,22 +9,21 @@ jobs:
     name: Create deployment artifacts
     runs-on: ubuntu-latest
 
-  steps:
-    - uses: actions/checkout@v3
-  
-    - name: Compile CSS and Javascript
-      run: |
-        npm install
-        npm run prod
-    
-    - name: Configure PHP
-      uses: shivammathur/setup-php@master
-      with:
-        php-version: '8.3'
-        extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Compile CSS and Javascript
+        run: |
+          npm install
+          npm run prod
+      
+      - name: Configure PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: '8.3'
+          extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
 
-  - name: Composer install
-    run: |
-      composer install --no-dev --no-interaction --prefer-dist
-
-    
+      - name: Composer install
+        run: |
+          composer install --no-dev --no-interaction --prefer-dist
