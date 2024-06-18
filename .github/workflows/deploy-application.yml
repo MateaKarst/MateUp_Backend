@@ -19,6 +19,7 @@ jobs:
 
       - name: Install Composer
         run: |
+          composer self-update
           composer install --no-dev --no-interaction --prefer-dist
 
       - name: Install PHP and extensions
@@ -29,3 +30,5 @@ jobs:
 
       - name: Compile assets
         run: npm install && npm run prod
+
+      # Add deployment steps here (e.g., deploy to server or hosting platform)
