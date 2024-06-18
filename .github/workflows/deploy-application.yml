@@ -37,9 +37,12 @@ jobs:
         run: |
           tar -czf "${GITHUB_SHA}.tar.gz" --exclude=*.git --exclude=node_modules *
 
+      - name: Verify artifact creation
+        run: |
+          ls -lh ${GITHUB_SHA}.tar.gz
+
       - name: Store artifacts for deployments
         uses: actions/upload-artifact@v3
         with:
           name: app-build
           path: "${GITHUB_SHA}.tar.gz"
-
