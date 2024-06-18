@@ -33,8 +33,7 @@ Route::group([
     'middleware' => 'auth:sanctum',
     'middleware' => 'api-session',
     'middleware' => 'check-token',
-], function () {});
-
+], function () {
     // User Routes
     Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.get'); // Get all users
     Route::get('/user/{id}', [UserController::class, 'getUser'])->name('user.get'); // Get a user
@@ -63,9 +62,12 @@ Route::group([
 
     // Challenge Routes
     Route::get('/challenges/club-challenges/{memberId}', [ChallengesController::class, 'getMemberClubChallenges'])->name('challenges.get'); // Get all challenges
+});
+
 
     
 
+// UNUSED ROUTES
 
 // // -------------- USER ROUTES : MEMBER, TRAINER, ADMIN -------------- 
 // // ------- PUBLIC ROUTES ------- 
