@@ -32,9 +32,8 @@ jobs:
         run: npm install
 
       - name: Create deployment artifacts
-        env:
-          GITHUB_SHA: ${{ github.sha }}
         run: |
+          GITHUB_SHA=$(echo "${GITHUB_SHA}" | cut -c 1-8)  # Truncate GITHUB_SHA for simplicity
           tar -czf "${GITHUB_SHA}.tar.gz" --exclude=*.git --exclude=node_modules *
 
       - name: Verify artifact creation
