@@ -1,5 +1,4 @@
 name: Deploy Application
-
 on:
   push:
     branches: [main]
@@ -8,27 +7,23 @@ jobs:
   create-deployment-artifacts:
     name: Create deployment artifacts
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Install Node.js and npm
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
 
-      - name: Install Composer
-        run: |
-          composer self-update
-          composer install --no-dev --no-interaction --prefer-dist
+  steps:
+  - uses: actions/checkout@v3
+  
+  - name: Compile CSS and Javascript
+    run: |
+      npm install
+      npm run prod
+    
+  - name: Configure PHP
+    uses: shivammathur/setup-php@master
+    with:
+      php-version: '8.3'
+      extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
 
-      - name: Install PHP and extensions
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
+  - name: Composer install
+    run: |
+    composer install --no-dev --no-interaction --prefer-dist
 
-      - name: Compile assets
-        run: npm install && npm run prod
-
-      # Add deployment steps here (e.g., deploy to server or hosting platform)
+    
