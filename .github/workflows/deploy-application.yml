@@ -41,7 +41,9 @@ jobs:
           ls -lh "${GITHUB_SHA}.tar.gz" || echo "Artifact ${GITHUB_SHA}.tar.gz not found"
 
       - name: Store artifacts for deployments
+        if: success()  # Only store artifacts if the previous steps were successful
         uses: actions/upload-artifact@v3
         with:
           name: app-build
           path: "${{ github.workspace }}/${GITHUB_SHA}.tar.gz"
+          if-no-files-found: warn
