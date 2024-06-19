@@ -72,7 +72,6 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        print($user);
         return view('components.user-edit', compact('user'));
     }
 
@@ -106,7 +105,6 @@ class UserController extends Controller
             'facebook' => $request->facebook,
             'instagram' => $request->instagram,
             'twitter' => $request->twitter,
-            'updated_at' => now(),
         ]);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');

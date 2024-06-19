@@ -20,23 +20,19 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('l
 // Route to handle login form submission
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
-// USER ROUTES
-
-
-
-
-// DASHBOARD ROUTE
+// Routes Panel
 Route::group([
     'middleware' => 'api-session',
-], function () {
+], function () {  
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
     Route::get('/users/{id}/delete', [UserController::class, 'confirmDelete'])->name('users.confirmDelete');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 });

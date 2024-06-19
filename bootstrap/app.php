@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'customAuth' => \App\Http\Middleware\AuthMiddleware::class,
             'api-session' => \Illuminate\Session\Middleware\StartSession::class,
             'check-token' => \App\Http\Middleware\CheckToken::class,
+            'check-token-web' => \App\Http\Middleware\Web\CheckToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

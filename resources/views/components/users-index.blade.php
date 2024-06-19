@@ -16,14 +16,12 @@
                 <tr>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 5%;">ID</th>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 10%;">Role</th>
-                    <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 15%;">Username</th>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 20%;">Email</th>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 10%;">Name</th>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 10%;">Surname</th>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 10%;">Phone</th>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 10%;">Created At</th>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 10%;">Updated At</th>
-                    <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 15%;">User Token</th>
                     <th scope="col" class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left" style="width: 10%;">Actions</th>
                 </tr>
             </thead>
@@ -32,14 +30,12 @@
                 <tr>
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->role }}</td>
-                    <td>{{ $user->username }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->surname }}</td>
                     <td>{{ $user->phone }}</td>
                     <td>{{ $user->created_at->format('Y-m-d') }}</td>
                     <td>{{ $user->updated_at->format('Y-m-d') }}</td>
-                    <td>{{ $user->user_token }}</td>
                     <td>
                         <a href="{{ route('users.edit', $user->id) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
                         <a href="{{ route('users.confirmDelete', $user->id) }}" class="ml-2 text-red-600 hover:text-red-900">Delete</a>
@@ -54,8 +50,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function getAllUsers() {
-        $.ajax({
-            url: '/api/users',
+        const fetchUsers =({
+            url: '/web/users',
             method: 'GET',
             success: function(data) {
                 console.log('Users from users-index.blade.php', data);
@@ -81,8 +77,8 @@
                             <td>${updatedAt}</td>
                             <td>${user.user_token}</td>
                             <td>
-                                <a href="/users/${user.id}/edit">Edit</a>
-                                <a href="/users/${user.id}/delete" class="ml-2 text-red-600 hover:text-red-900">Delete</a>
+                                <a href="/web/users/${user.id}/edit">Edit</a>
+                                <a href="/web/users/${user.id}/delete" class="ml-2 text-red-600 hover:text-red-900">Delete</a>
                             </td>
                         </tr>
                     `;
@@ -100,6 +96,7 @@
 
     // Fetch users every 5 seconds
     setInterval(getAllUsers, 5000);
+    console.log('Users from users-index.blade.php', getAllUsers);
 
     // Fetch users on page load
     $(document).ready(function() {
