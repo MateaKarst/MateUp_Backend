@@ -48,6 +48,7 @@ class TrainerController extends Controller
                 return response()->json([
                     'status' => true,
                     'message' => 'Trainer created successfully',
+                    'trainer' => $trainer
                 ]);
             }
 

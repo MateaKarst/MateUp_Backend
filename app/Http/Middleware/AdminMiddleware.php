@@ -15,17 +15,21 @@ class AdminMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    
+
     // AdminMiddleware.php
     public function handle(Request $request, Closure $next)
     {
-        // Check if user is authenticated and has admin role
-        if (auth()->check() && auth()->user()->role === 'admin') {
-            // Proceed with request
-            return $next($request);
+        // Ensure the request has a user (set by CheckToken middleware)
+        if (!$request->user) {
+            return response()->json(['message' => 'Unauthorized access'], 401);
         }
 
-        // Return forbidden response
-        abort(403, 'Unauthorized.');
+        // Check if user is an admin
+        if ($request->user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized access'], 403);
+        }
+
+        // Proceed with request
+        return $next($request);
     }
 }

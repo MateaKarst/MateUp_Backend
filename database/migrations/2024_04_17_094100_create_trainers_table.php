@@ -22,8 +22,8 @@ return new class extends Migration
 
             $table->string('rate_currency');
             $table->integer('rate_amount');
-            $table->string('stripe_id')->unique();
-            $table->string('stripe_url')->unique();
+            $table->string('stripe_id');
+            $table->string('stripe_url');
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->nullable();

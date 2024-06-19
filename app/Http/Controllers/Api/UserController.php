@@ -207,21 +207,20 @@ class UserController extends Controller
                 // Get user by ID
                 $user = User::find($userId);
             } else {
-                // Get user from authenticated user
-                $userId = auth()->user()->id;
-                $user = User::find($userId);
+                // Get authenticated user
+                $user = auth()->user();
             }
 
             // Check if user exists
-            if ($user instanceof \App\Models\User) {
+            if ($user) {
                 // Validate request
                 $request->validate([
-                    "username" => "required",
+                    "username" => "required|unique:users,username," . $user->id,
                     "email" => "required|email|unique:users,email," . $user->id,
-                    "password" => "confirmed",
+                    "password" => "nullable|confirmed|min:8",
                     "name" => "required",
                     "surname" => "required",
-                    "phone" => "required",
+                    "phone" => "required|unique:users,phone," . $user->id,
                     "bio" => "nullable",
                     "profile_image_url" => "nullable",
                     "facebook" => "nullable",
@@ -233,7 +232,7 @@ class UserController extends Controller
                 $user->update([
                     "username" => $request->username,
                     "email" => $request->email,
-                    "password" => isset($request->password) ? Hash::make($request->password) : $user->password,
+                    "password" => $request->password ? Hash::make($request->password) : $user->password,
                     "name" => $request->name,
                     "surname" => $request->surname,
                     "phone" => $request->phone,
@@ -253,7 +252,7 @@ class UserController extends Controller
                 ]);
             }
 
-            // Return error response
+            // Return error response if user not found
             return response()->json([
                 "status" => false,
                 "message" => "User not found"

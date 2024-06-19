@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Middleware\CheckToken;
+use App\Models\User;
 
 class TrainerMiddleware
 {
@@ -19,13 +21,17 @@ class TrainerMiddleware
     // TrainerMiddleware.php
     public function handle(Request $request, Closure $next)
     {
-        // Check if user is authenticated and has trainer role
-        if (auth()->check() && auth()->user()->role === 'trainer') {
-            // Proceed with request
-            return $next($request);
+        // Ensure the request has a user (set by CheckToken middleware)
+        if (!$request->user) {
+            return response()->json(['message' => 'Unauthorized access'], 401);
         }
 
-        // Return forbidden response
-        abort(403, 'Unauthorized.');
+        // Check if user is an trainer
+        if ($request->user->role !== 'trainer') {
+            return response()->json(['message' => 'Unauthorized access'], 403);
+        }
+
+        // Proceed with request
+        return $next($request);
     }
 }

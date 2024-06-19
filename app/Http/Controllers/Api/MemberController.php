@@ -60,11 +60,17 @@ class MemberController extends Controller
     }
 
     // Get member
-    public function getMember($memberId)
+    public function getMember($memberId = null)
     {
         try {
             // Get member
-            $member = Member::where('id', $memberId)->first();
+            if ($memberId) {
+                // Get member by member ID
+                $member = Member::where('id', $memberId)->first();
+            } else {
+                // Get member from authenticated user
+                $member = Member::where('user_id', auth()->user()->id)->first();
+            }
 
             // Check if member exists
             if ($member) {
