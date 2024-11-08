@@ -1,3 +1,7 @@
+# MateUp
+MateUp is a social community app designed to help gym-goers connect, track each other's schedules, and join classes together. Built collaboratively by our team: I developed the backend, [Nasrin](https://github.com/NasrinMansouri) created the frontend, and [Violeta](https://github.com/VioletaTaneva) handled the technology stack.
+
+
 
 # Installation Steps
 This guide provides instructions for setting up and installing the Laravel application.
